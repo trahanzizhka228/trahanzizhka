@@ -233,8 +233,34 @@ function checkoutToTelegram() {
         alert('📦 Корзина пуста!');
         return;
     }
+    
+    // Получаем данные из Telegram WebApp
+    const tg = window.Telegram?.WebApp;
+    let username = 'Не указан';
+    
+    if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) {
+        username = tg.initDataUnsafe.user.username || 
+                   tg.initDataUnsafe.user.first_name || 
+                   'Не указан';
+    }
+    
+    // Получаем текущую дату и время
+    const now = new Date();
+    const day = now.getDate().toString().padStart(2, '0');
+    const month = (now.getMonth() + 1).toString().padStart(2, '0');
+    const year = now.getFullYear().toString().slice(-2);
+    const hours = now.getHours().toString().padStart(2, '0');
+    const minutes = now.getMinutes().toString().padStart(2, '0');
+    
+    const dateString = `${day}.${month}.${year}`;
+    const timeString = `${hours}:${minutes}`;
+    
     const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    let message = '🛒 ЗАКАЗ TRAHAN ZIZHKA%0A%0A📋 Товары:%0A';
+    let message = '🛒 ЗАКАЗ TRAHAN ZIZHKA%0A%0A';
+    message += `📅 Дата: ${dateString}%0A`;
+    message += `⏰ Время: ${timeString}%0A`;
+    message += `👤 Юзернейм: ${username}%0A%0A`;
+    message += '📋 Товары:%0A';
     cart.forEach(item => {
         message += `▪️ ${item.name} × ${item.quantity} = ${item.price * item.quantity} BYN%0A`;
     });
