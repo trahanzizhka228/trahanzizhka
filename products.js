@@ -134,7 +134,7 @@ const products = [{
         ],
         description: "30мл" 
     },
-     // 🧊 ANIMMA LOVE TOYZ (1 карточка + 4)
+    /* // 🧊 ANIMMA LOVE TOYZ (1 карточка + 4)
     { 
         id: 79, 
         name: "ANIMMA LOVE TOYZ✔️", 
@@ -149,11 +149,11 @@ const products = [{
 
         ],
         description: "75mg,30мл" 
-    },
+    },*/
 
     // Одиночные жидкости
-    { id: 27, name: "ANNIMA LOVE MISIDE — Добрый арбуз 🍉", price: 16, category: "liquid", brand: "jord", flavors: [], description: "30мл" },
-    { id: 34, name: "HOTSPOT ICE — Кола 🥤", price: 14, category: "liquid", brand: "jord", flavors: [], description: "30мл" },
+   // { id: 27, name: "ANNIMA LOVE MISIDE — Добрый арбуз 🍉", price: 16, category: "liquid", brand: "jord", flavors: [], description: "30мл" },
+   // { id: 34, name: "HOTSPOT ICE — Кола 🥤", price: 14, category: "liquid", brand: "jord", flavors: [], description: "30мл" },
    
 
     // 🔧 РАСХОДНИКИ
