@@ -98,87 +98,6 @@ const products = [
     description: "30мл"
   },
   {
-    id: 46,
-    name: "Картридж xros 0.8 (2мл)",
-    price: 13,
-    category: "consumables",
-    brand: "vaporesso",
-    flavors: [],
-    description: "Оригинал, 3мл"
-  },
-  {
-    id: 48,
-    name: "Картридж xros 0.4 (3мл)",
-    price: 13,
-    category: "consumables",
-    brand: "vaporesso",
-    flavors: [],
-    description: "Оригинал, 3мл"
-  },
-  {
-    id: 49,
-    name: "Картридж xros 0.6 (2мл)",
-    price: 13,
-    category: "consumables",
-    brand: "vaporesso",
-    flavors: [],
-    description: "Оригинал, 2мл"
-  },
-  {
-    id: 50,
-    name: "Испаритель Aegis Coil B0 (50-58w)",
-    price: 13,
-    category: "consumables",
-    brand: "geekvape",
-    flavors: [],
-    description: "0.2Ω, 5 шт"
-  },
-  {
-    id: 98,
-    name: "испаритель PASITO 3/PASITO 2/KNIGHT 80",
-    price: 12,
-    category: "consumables",
-    brand: "smoant",
-    flavors: [],
-    description: "0.15Ω,(70-90) "
-  },
-  {
-    id: 97,
-    name: "испаритель PASITO 3/PASITO 2/KNIGHT 80",
-    price: 12,
-    category: "consumables",
-    brand: "smoant",
-    flavors: [],
-    description: "0.15Ω, (55-65)"
-  },
-  {
-    id: 51,
-    name: "НИКОБУСТЕР SALT (+20мг на 30 мл)",
-    price: 3,
-    category: "consumables",
-    brand: "jord",
-    flavors: [],
-    description: "Для миксования"
-  },
-  {
-    id: 52,
-    name: "Marlboro Red (KING SIZE)",
-    price: 10,
-    category: "cigarettes",
-    brand: "marlboro",
-    flavors: [],
-    description: "Полная пачка"
-  },
-  {
-    id: 57,
-    name: "Marlboro Brown (COMPACT)",
-    price: 10,
-    category: "cigarettes",
-    brand: "marlboro",
-    flavors: [],
-    description: "Полная пачка"
-  },
-  {
     id: 81,
     name: "Монашка HOTSPOT",
     price: 18,
@@ -262,6 +181,88 @@ const products = [
     ],
     description: "30мл"
   },
+  {
+    id: 46,
+    name: "Картридж xros 0.8 (2мл)",
+    price: 13,
+    category: "consumables",
+    brand: "vaporesso",
+    flavors: [],
+    description: "Оригинал, 3мл"
+  },
+  {
+    id: 48,
+    name: "Картридж xros 0.4 (3мл)",
+    price: 13,
+    category: "consumables",
+    brand: "vaporesso",
+    flavors: [],
+    description: "Оригинал, 3мл"
+  },
+  {
+    id: 49,
+    name: "Картридж xros 0.6 (2мл)",
+    price: 13,
+    category: "consumables",
+    brand: "vaporesso",
+    flavors: [],
+    description: "Оригинал, 2мл"
+  },
+  {
+    id: 50,
+    name: "Испаритель Aegis Coil B0 (50-58w)",
+    price: 13,
+    category: "consumables",
+    brand: "geekvape",
+    flavors: [],
+    description: "0.2Ω, 5 шт"
+  },
+  {
+    id: 98,
+    name: "испаритель PASITO 3/PASITO 2/KNIGHT 80",
+    price: 12,
+    category: "consumables",
+    brand: "smoant",
+    flavors: [],
+    description: "0.15Ω,(70-90) "
+  },
+  {
+    id: 97,
+    name: "испаритель PASITO 3/PASITO 2/KNIGHT 80",
+    price: 12,
+    category: "consumables",
+    brand: "smoant",
+    flavors: [],
+    description: "0.15Ω, (55-65)"
+  },
+  {
+    id: 51,
+    name: "НИКОБУСТЕР SALT (+20мг на 30 мл)",
+    price: 3,
+    category: "consumables",
+    brand: "jord",
+    flavors: [],
+    description: "Для миксования"
+  },
+  {
+    id: 52,
+    name: "Marlboro Red (KING SIZE)",
+    price: 10,
+    category: "cigarettes",
+    brand: "marlboro",
+    flavors: [],
+    description: "Полная пачка"
+  },
+  {
+    id: 57,
+    name: "Marlboro Brown (COMPACT)",
+    price: 10,
+    category: "cigarettes",
+    brand: "marlboro",
+    flavors: [],
+    description: "Полная пачка"
+  },
+  
   {
     id: 87,
     name: "LOST MARY 5к тяг",
