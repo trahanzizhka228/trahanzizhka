@@ -22,12 +22,9 @@ const products = [
     category: "liquid",
     brand: "jord",
     flavors: [
-      "Виноградный чупа-чупс 🪡",
-      "мята спрайт",
       "Клюква апельсин 🍊",
       "Мандарин персик 🍑",
       "Персик абрикос 🍑",
-      "малиновая газировка",
     ],
     description: "80mg, 30мл"
   },
@@ -39,24 +36,9 @@ const products = [
     brand: "jord",
     flavors: [
       "Арбузная жвачка 🤩",
-      "Вишневая кола 🍒",
-      //"Клубника банан 🍌",
-      "Клубника малина вишня со льдом ❄️",
-      //"Клюквенный ред булл 🐂",
     ],
     description: "60mg, 30мл"
   },
-  /*{
-    id: 28,
-    name: "ANNIMA & САМОУБИЙЦА 80MG 🔥",
-    price: 18,
-    category: "liquid",
-    brand: "jord",
-    flavors: [
-      //"Арбуз малина 🍓",
-    ],
-    description: "80mg, 30мл"
-  },*/
   {
     id: 30,
     name: "ГРЕХ САМОУБИЙЦА ☠️",
@@ -66,7 +48,6 @@ const products = [
     flavors: [
       "Сок земляники и смородины лед 🧊",
       "Барбарис малина лед 🥶",
-      "Клюква+красная смородина+лайм 🤩",
     ],
     description: "30мл"
   },
@@ -78,8 +59,6 @@ const products = [
     brand: "jord",
     flavors: [
       "Арбузно дынный фреш 🤩",
-      //"Вишня виноград 🍇",
-      "LIT ENERGY CLASSIK⚡️",
     ],
     description: "30мл"
   },
@@ -90,8 +69,6 @@ const products = [
     category: "liquid",
     brand: "jord",
     flavors: [
-      //"Лимонад из малины и черники 🫐",
-      "Клубничный коктейль 🍸",
       "Морс из красных ягод 🥶",
       "Виноградные леденцы лед 🧊",
     ],
@@ -108,49 +85,10 @@ const products = [
       "Ледяной энергетик",
       "Клубничный мохито",
       "Кола тамаринд лайм",
-      //"Клубника лайм",
       "Вишня ананас мята 1",
     ],
     description: "30мл"
   },
-  {
-    id: 82,
-    name: "ANNIMA ZOMBI LOVE",
-    price: 18,
-    category: "liquid",
-    brand: "jord",
-    flavors: [
-      "Вишня лед",
-      "Арбузный Бабл гам",
-      //"Клубничный леденец",
-      //"Клубника банан",
-      //"Морозный ред Булл",
-      "Лесной микс",
-    ],
-    description: "30мл"
-  },
-  /*{
-    id: 83,
-    name: "Злая лабуба",
-    price: 16,
-    category: "liquid",
-    brand: "jord",
-    flavors: [
-      "Клубничная жвачка",
-    ],
-    description: "30мл"
-  },
-  {
-    id: 84,
-    name: "Злая милфа",
-    price: 16,
-    category: "liquid",
-    brand: "jord",
-    flavors: [
-      "Клубника банан папайя",
-    ],
-    description: "30мл"
-  },*/
   {
     id: 85,
     name: "HOTSPOT FUEL",
@@ -160,11 +98,9 @@ const products = [
     flavors: [
       "Свежая перечная мята",
       "Дыня черника",
-      "Манго грейпфрут",
       "Персик маракуйя",
       "Яблоко груша",
       "Личи лайм",
-      "Брусника лимон",
     ],
     description: "30мл"
   },
@@ -175,20 +111,9 @@ const products = [
     category: "liquid",
     brand: "jord",
     flavors: [
-      "Ледяной виноград",
       "Сочный персик",
-      "Зеленое яблоко",
     ],
     description: "30мл"
-  },
-  {
-    id: 46,
-    name: "Картридж xros 0.8 (2мл)",
-    price: 13,
-    category: "consumables",
-    brand: "vaporesso",
-    flavors: [],
-    description: "Оригинал, 3мл"
   },
   {
     id: 48,
@@ -198,15 +123,6 @@ const products = [
     brand: "vaporesso",
     flavors: [],
     description: "Оригинал, 3мл"
-  },
-  {
-    id: 49,
-    name: "Картридж xros 0.6 (2мл)",
-    price: 13,
-    category: "consumables",
-    brand: "vaporesso",
-    flavors: [],
-    description: "Оригинал, 2мл"
   },
   {
     id: 50,
@@ -262,7 +178,6 @@ const products = [
     flavors: [],
     description: "Полная пачка"
   },
-  
   {
     id: 87,
     name: "LOST MARY 5к тяг",
@@ -363,9 +278,8 @@ const products = [
       "Табак",
     ],
     description: "12000 тяг"
-  }
-,
-{
+  },
+  {
     id: 96,
     name: "Lost Mary 5к тяг ",
     price: 20,
