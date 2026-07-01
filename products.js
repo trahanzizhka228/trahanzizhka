@@ -15,30 +15,64 @@ const products = [
     ],
     description: "Cнюс , крепкий"
   },
-  {
-    id: 8,
-    name: "BJORN LONG 80mg 🧛",
-    price: 20,
-    category: "liquid",
-    brand: "jord",
-    flavors: [
-      "Клюква апельсин 🍊",
-      "Мандарин персик 🍑",
-      "Персик абрикос 🍑",
-    ],
-    description: "80mg, 30мл"
-  },
-  {
-    id: 21,
-    name: "BJORN V МЁД 60mg 🔥",
-    price: 18,
-    category: "liquid",
-    brand: "jord",
-    flavors: [
-      "Арбузная жвачка 🤩",
-    ],
-    description: "60mg, 30мл"
-  },
+{
+  id: 8,
+  name: "BJORN LONG 80mg 🧛",
+  price: 20,
+  category: "liquid",
+  brand: "jord",
+  flavors: [
+    "Клюква апельсин 🍊",
+    "Мандарин персик 🍑",
+    "Персик абрикос 🍑",
+  ],
+  description: "80mg, 30мл"
+},
+{
+  id: 21,
+  name: "BJORN V МЁД 60mg 🔥",
+  price: 18,
+  category: "liquid",
+  brand: "jord",
+  flavors: [
+    "Арбузная жвачка 🤩",
+  ],
+  description: "60mg, 30мл"
+},
+{
+  id: 101,
+  name: "BJORN ТЕМНЫЙ ХОР",
+  price: 20,
+  category: "liquid",
+  brand: "jord",
+  flavors: [
+    "Мятная жвачка",
+    "Голубика лед",
+    "Арбуз лед",
+    "Ягодный микс ментол",
+    "Кислый ягодный микс",
+    "Клубника мята",
+  ],
+  description: "30мл"
+},
+{
+  id: 102,
+  name: "BJORN СОН ПРИЗРАКА",
+  price: 20,
+  category: "liquid",
+  brand: "jord",
+  flavors: [
+    "Ледяная клубника личи",
+    "Манго со льдом",
+    "Ананас манго",
+    "Кислое яблоко",
+    "Яблоко персик",
+    "Вишня",
+    "Вишневая кола со льдом",
+    "Киви маракуйя гуава",
+  ],
+  description: "30мл"
+},
   {
     id: 30,
     name: "ГРЕХ САМОУБИЙЦА ☠️",
