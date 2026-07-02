@@ -324,4 +324,21 @@ const products = [
     ],
     description: "5000 тяг"
   }
+,
+  {
+    id: 103,
+    name: "SiM 7000 PUFFS ",
+    price: 20,
+    category: "disposable",
+    brand: "SIM",
+    flavors: [
+   "Strawberry Avocado ",
+"Rose milk “,
+"Ice mint “,
+"Mulberry grape “,
+    ],
+    description: "7000 тяг"
+  }
+
+
 ];
