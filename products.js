@@ -333,12 +333,12 @@ const products = [
     brand: "SIM",
     flavors: [
    "Strawberry Avocado ",
-"Rose milk ",
-"Ice mint ",
-"Mulberry grape ",
+   "Rose milk ",
+   "Ice mint ",
+   "Mulberry grape ",
     ],
     description: "7000 тяг"
   }
-
+,
 
 ];
