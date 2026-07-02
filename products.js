@@ -327,18 +327,18 @@ const products = [
 ,
    {
     id: 103,
-    name: "Монашка HOTSPOT",
-    price: 18,
-    category: "liquid",
-    brand: "jord",
+    name: "SiM 7000 PUFFS",
+    price: 20,
+    category: "disposable",
+    brand: "Sim",
     flavors: [
-      "Мармеладные червячки",
-      "Ледяной энергетик",
-      "Клубничный мохито",
-      "Кола тамаринд лайм",
-      "Вишня ананас мята 1",
+      "Strawberry Avocado ",
+      "Rose milk ",
+      "Ice mint ",
+      "Mulberry grape ",
+    
     ],
-    description: "30мл"
+    description: "7000 тяг"
   },
 
 ];
