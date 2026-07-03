@@ -103,7 +103,7 @@ const products = [
     category: "liquid",
     brand: "jord",
     flavors: [
-      "Морс из красных ягод 🥶",
+     // "Морс из красных ягод 🥶",
       "Виноградные леденцы лед 🧊",
     ],
     description: "30мл"
