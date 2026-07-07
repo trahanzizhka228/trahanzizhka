@@ -50,7 +50,7 @@ const products = [
     "Голубика лед",
     "Арбуз лед",
     "Ягодный микс ментол",
-    "Кислый ягодный микс",
+   // "Кислый ягодный микс",
     "Клубника мята",
   ],
   description: "30мл"
@@ -73,7 +73,7 @@ const products = [
   ],
   description: "30мл"
 },
-  {
+ /* {
     id: 30,
     name: "ГРЕХ САМОУБИЙЦА ☠️",
     price: 18,
@@ -84,7 +84,7 @@ const products = [
     //  "Барбарис малина лед 🥶",
     ],
     description: "30мл"
-  },
+  },*/
   {
     id: 36,
     name: "САМОУБИЙЦА V2 DANGER ⚡️",
@@ -138,6 +138,7 @@ const products = [
     ],
     description: "30мл"
   },
+  
   /*{
     id: 86,
     name: "HOTSPOT DON’T CHEW IT",
@@ -152,6 +153,15 @@ const products = [
   {
     id: 48,
     name: "Картридж xros 0.4 (3мл)",
+    price: 13,
+    category: "consumables",
+    brand: "vaporesso",
+    flavors: [],
+    description: "Оригинал, 3мл"
+  }, 
+  {
+    id: 48,
+    name: "Картридж xros 0.6 (3мл)",
     price: 13,
     category: "consumables",
     brand: "vaporesso",
