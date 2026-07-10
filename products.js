@@ -16,6 +16,19 @@ const products = [
     description: "Cнюс , крепкий"
   },
   {
+  id: 2,
+  name: "D.L.T.A XS ☠️",
+  price: 16,
+  category: "snus",
+  brand: "jord",
+  flavors: [
+    "Микс ягод",
+    "Зеленый виноград мята"
+  ],
+  description: "Снюс, крепкий"
+},
+
+  {
     id: 8,
     name: "BJORN LONG 80mg 🧛",
     price: 20,
