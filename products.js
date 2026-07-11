@@ -274,6 +274,24 @@ const products = [
     flavors: [],
     description: "Оригинал, 3мл"
   },
+    {
+    id: 112,
+    name: "Картридж xros 0.8 (3мл)",
+    price: 13,
+    category: "consumables",
+    brand: "vaporesso",
+    flavors: [],
+    description: "Оригинал, 3мл"
+  }, 
+    {
+    id: 113,
+    name: "Картридж xros 0.7 (3мл)",
+    price: 13,
+    category: "consumables",
+    brand: "vaporesso",
+    flavors: [],
+    description: "Оригинал, 3мл"
+  }, 
   {
     id: 50,
     name: "Испаритель Aegis Coil B0 (50-58w)",
