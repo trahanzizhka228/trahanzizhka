@@ -12,6 +12,8 @@ const products = [
       "Adrenaline RUSH 🤩",
       "Adrenaline VITAMIN POWER 🙃",
       "MONSTER ENERGY 🖤",
+     " Red bull The blue edition", 
+"Red bull The pink edition"
     ],
     description: "Cнюс , крепкий"
   },
@@ -37,7 +39,7 @@ const products = [
     flavors: [
       "Клюква апельсин 🍊",
       "Мандарин персик 🍑",
-      "Персик абрикос 🍑",
+     // "Персик абрикос 🍑",
       "Мята спрайт",
       "Киви яблоко",
     //  "Ягодная жвачка",
@@ -85,7 +87,7 @@ const products = [
       "Яблоко персик",
       "Вишня",
      // "Вишневая кола со льдом",
-      "Киви маракуйя гуава",
+    //  "Киви маракуйя гуава",
     ],
     description: "30мл"
   },
