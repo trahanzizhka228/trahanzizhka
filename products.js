@@ -181,7 +181,7 @@ const products = [
   {
     id: 201,
     name: "HOTSPOT DON'T CHEW IT 60 мг",
-    price: 8.5,
+    price: 14,
     category: "liquid",
     brand: "jord",
     flavors: [
@@ -197,7 +197,7 @@ const products = [
   {
     id: 202,
     name: "HOTSPOT DOT 60 мг",
-    price: 8.5,
+    price: 14,
     category: "liquid",
     brand: "jord",
     flavors: [
@@ -211,7 +211,7 @@ const products = [
   {
     id: 203,
     name: "HOTSPOT FUEL 60 мг",
-    price: 8.5,
+    price: 14,
     category: "liquid",
     brand: "jord",
     flavors: [
@@ -224,7 +224,7 @@ const products = [
   {
     id: 204,
     name: "HOTSPOT x PODONKI 60 мг",
-    price: 9.5,
+    price: 14,
     category: "liquid",
     brand: "jord",
     flavors: [
