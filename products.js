@@ -177,23 +177,66 @@ const products = [
     ],
     description: "70mg, 30мл"
   },
+
   {
-    id: 106,
-    name: "HOTSPOT X PODONKI",
-    price: 15,
+    id: 201,
+    name: "HOTSPOT DON'T CHEW IT 60 мг",
+    price: 8.5,
     category: "liquid",
     brand: "jord",
     flavors: [
-     // "Кислая вишня",
+      "Жвачка арбуз",
+      "Жвачка зеленое яблоко",
+      "Жвачка ледяная вишня",
+      "Жвачка ледяной виноград",
+      "Жвачка маракуйя",
+      "Жвачка сочный персик"
+    ],
+    description: "60мг"
+  },
+  {
+    id: 202,
+    name: "HOTSPOT DOT 60 мг",
+    price: 8.5,
+    category: "liquid",
+    brand: "jord",
+    flavors: [
+      "Банан лайм",
+      "Клубника мята",
+      "Малина смородина",
+      "Нектарин вишня"
+    ],
+    description: "60мг"
+  },
+  {
+    id: 203,
+    name: "HOTSPOT FUEL 60 мг",
+    price: 8.5,
+    category: "liquid",
+    brand: "jord",
+    flavors: [
+      "Дыня черника",
+      "Лесные ягоды",
+      "Смородина мята"
+    ],
+    description: "60мг"
+  },
+  {
+    id: 204,
+    name: "HOTSPOT x PODONKI 60 мг",
+    price: 9.5,
+    category: "liquid",
+    brand: "jord",
+    flavors: [
       "Освежающая кола",
-      //"Освежающий лимонад лайм мята",
-     // "Холодная клубничная жвачка",
-      //"Холодная сладкая мята",
-      "Холодный арбуз",
+      "Освежающий лимонад лайм мята",
+      "Холодная сладкая мята",
       "Холодное яблоко"
     ],
-    description: "60mg, 30мл"
+    description: "60мг"
+  
   },
+
   {
     id: 107,
     name: "PODONKI INFERNO",
