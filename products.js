@@ -102,7 +102,7 @@ const products = [
     ],
     description: "30мл"
   },
-  {
+/*  {
     id: 41,
     name: "ЗЛАЯ МОНАШКА ICE 🧊",
     price: 18,
@@ -112,7 +112,7 @@ const products = [
       "Виноградные леденцы лед 🧊",
     ],
     description: "30мл"
-  },
+  },*/
   {
     id: 81,
     name: "Монашка HOTSPOT",
@@ -281,7 +281,7 @@ const products = [
     flavors: [
      // "Черника малина мята лед",
       "Виноградно-вишневый холм лед",
-      "Кислая черника морошка",
+    //  "Кислая черника морошка",
       "Красное сладкое яблоко с кислинкой"
     ],
     description: "50mg, 30мл"
@@ -380,7 +380,8 @@ const products = [
   },
   {
     id: 97,
-    name: "испаритель PASITO 3/PASITO 2/KNIGHT 80",
+    name: "испаритель PASITO 3/PASITO 2/KNIGHT 80
+    (0.15Ω, (55-65))",
     price: 12,
     category: "consumables",
     brand: "smoant",
