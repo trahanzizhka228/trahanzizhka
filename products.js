@@ -12,24 +12,23 @@ const products = [
       "Adrenaline RUSH 🤩",
       "Adrenaline VITAMIN POWER 🙃",
       "MONSTER ENERGY 🖤",
-     " Red bull The blue edition", 
-"Red bull The pink edition"
+      "Red bull The blue edition",
+      "Red bull The pink edition"
     ],
     description: "Cнюс , крепкий"
   },
   {
-  id: 2,
-  name: "D.L.T.A XS ☠️",
-  price: 16,
-  category: "snus",
-  brand: "jord",
-  flavors: [
-    "Микс ягод",
-    "Зеленый виноград мята"
-  ],
-  description: "Снюс, крепкий"
-},
-
+    id: 2,
+    name: "D.L.T.A XS ☠️",
+    price: 16,
+    category: "snus",
+    brand: "jord",
+    flavors: [
+      "Микс ягод",
+      "Зеленый виноград мята"
+    ],
+    description: "Снюс, крепкий"
+  },
   {
     id: 8,
     name: "BJORN LONG 80mg 🧛",
@@ -39,25 +38,10 @@ const products = [
     flavors: [
       "Клюква апельсин 🍊",
       "Мандарин персик 🍑",
-     // "Персик абрикос 🍑",
-     // "Мята спрайт",
-      //"Киви яблоко",
-    //  "Ягодная жвачка",
-      "Морс из лесных ягод",
+      "Морс из лесных ягод"
     ],
     description: "80mg, 30мл"
   },
-  /*{
-    id: 21,
-    name: "BJORN V МЁД 60mg 🔥",
-    price: 18,
-    category: "liquid",
-    brand: "jord",
-    flavors: [
-      "Арбузная жвачка 🤩",
-    ],
-    description: "60mg, 30мл"
-  },*/
   {
     id: 101,
     name: "BJORN ТЕМНЫЙ ХОР",
@@ -66,10 +50,8 @@ const products = [
     brand: "jord",
     flavors: [
       "Мятная жвачка",
-     // "Голубика лед",
-     // "Арбуз лед",
       "Ягодный микс ментол",
-      "Клубника мята",
+      "Клубника мята"
     ],
     description: "30мл"
   },
@@ -84,10 +66,7 @@ const products = [
       "Манго со льдом",
       "Ананас манго",
       "Кислое яблоко",
-      "Яблоко персик",
-    //  "Вишня",
-     // "Вишневая кола со льдом",
-    //  "Киви маракуйя гуава",
+      "Яблоко персик"
     ],
     description: "30мл"
   },
@@ -98,21 +77,10 @@ const products = [
     category: "liquid",
     brand: "jord",
     flavors: [
-      "Арбузно дынный фреш 🤩",
+      "Арбузно дынный фреш 🤩"
     ],
     description: "30мл"
   },
-/*  {
-    id: 41,
-    name: "ЗЛАЯ МОНАШКА ICE 🧊",
-    price: 18,
-    category: "liquid",
-    brand: "jord",
-    flavors: [
-      "Виноградные леденцы лед 🧊",
-    ],
-    description: "30мл"
-  },*/
   {
     id: 81,
     name: "Монашка HOTSPOT",
@@ -123,23 +91,10 @@ const products = [
       "Мармеладные червячки",
       "Ледяной энергетик",
       "Кола тамаринд лайм",
-      "Вишня ананас мята 1",
+      "Вишня ананас мята 1"
     ],
     description: "30мл"
   },
- /* {
-    id: 85,
-    name: "HOTSPOT FUEL",
-    price: 8,
-    category: "liquid",
-    brand: "jord",
-    flavors: [
-      "Свежая перечная мята",
-      "Персик маракуйя",
-      "Личи лайм",
-    ],
-    description: "30мл"
-  },*/
   {
     id: 104,
     name: "ЗЛАЯ МОНАШКА",
@@ -177,7 +132,6 @@ const products = [
     ],
     description: "70mg, 30мл"
   },
-
   {
     id: 201,
     name: "HOTSPOT DON'T CHEW IT 60 мг",
@@ -216,29 +170,25 @@ const products = [
     brand: "jord",
     flavors: [
       "Дыня черника",
-      //"Лесные ягоды",
       "Смородина мята"
     ],
     description: "60мг"
   },
   {
-  id: 106,
-  name: "HOTSPOT x PODONKI 60 мг",
-  price: 14,
-  category: "liquid",
-  brand: "jord",
-  flavors: [
-    "Освежающая кола",
-    "Освежающий лимонад лайм мята",
-    "Холодная сладкая мята",
-    "Холодное яблоко",
-    // "Кислая вишня",
-    "Холодный арбуз"
-  ],
-  description: "60мг"
-},
-
-
+    id: 106,
+    name: "HOTSPOT x PODONKI 60 мг",
+    price: 14,
+    category: "liquid",
+    brand: "jord",
+    flavors: [
+      "Освежающая кола",
+      "Освежающий лимонад лайм мята",
+      "Холодная сладкая мята",
+      "Холодное яблоко",
+      "Холодный арбуз"
+    ],
+    description: "60мг"
+  },
   {
     id: 107,
     name: "PODONKI INFERNO",
@@ -279,9 +229,7 @@ const products = [
     category: "liquid",
     brand: "jord",
     flavors: [
-     // "Черника малина мята лед",
       "Виноградно-вишневый холм лед",
-    //  "Кислая черника морошка",
       "Красное сладкое яблоко с кислинкой"
     ],
     description: "50mg, 30мл"
@@ -304,26 +252,25 @@ const products = [
     description: "60mg, 30мл"
   },
   {
-  id: 114,
-  name: "ANNIMA LOVE SOUR",
-  price: 16,
-  category: "liquid",
-  brand: "jord",
-  flavors: [
-    "Кислая черника апельсин",
-    "Кислая черника малина",
-    "Кислое яблоко киви",
-    "Кислые арбуз малина",
-    "Кислые лесные ягоды",
-    "Кислые малиновые червяки",
-    "Кислый виноградный чупа-чупс",
-    "Кислый зеленый виноград",
-    "Кислый скитлс",
-    "Энергетик кислая вишня"
-  ],
-  description: "50mg, 30мл"
-},
-
+    id: 114,
+    name: "ANNIMA LOVE SOUR",
+    price: 16,
+    category: "liquid",
+    brand: "jord",
+    flavors: [
+      "Кислая черника апельсин",
+      "Кислая черника малина",
+      "Кислое яблоко киви",
+      "Кислые арбуз малина",
+      "Кислые лесные ягоды",
+      "Кислые малиновые червяки",
+      "Кислый виноградный чупа-чупс",
+      "Кислый зеленый виноград",
+      "Кислый скитлс",
+      "Энергетик кислая вишня"
+    ],
+    description: "50mg, 30мл"
+  },
   {
     id: 48,
     name: "Картридж xros 0.4 (3мл)",
@@ -332,7 +279,7 @@ const products = [
     brand: "vaporesso",
     flavors: [],
     description: "Оригинал, 3мл"
-  }, 
+  },
   {
     id: 49,
     name: "Картридж xros 0.6 (3мл)",
@@ -342,7 +289,7 @@ const products = [
     flavors: [],
     description: "Оригинал, 3мл"
   },
-    {
+  {
     id: 112,
     name: "Картридж xros 0.8 (3мл)",
     price: 13,
@@ -350,8 +297,8 @@ const products = [
     brand: "vaporesso",
     flavors: [],
     description: "Оригинал, 3мл"
-  }, 
-    {
+  },
+  {
     id: 113,
     name: "Картридж xros 0.7 (3мл)",
     price: 13,
@@ -359,7 +306,7 @@ const products = [
     brand: "vaporesso",
     flavors: [],
     description: "Оригинал, 3мл"
-  }, 
+  },
   {
     id: 50,
     name: "Испаритель Aegis Coil B0 (50-58w)",
@@ -376,12 +323,11 @@ const products = [
     category: "consumables",
     brand: "smoant",
     flavors: [],
-    description: "0.15Ω,(70-90) "
+    description: "0.15Ω,(70-90)"
   },
   {
     id: 97,
-    name: "испаритель PASITO 3/PASITO 2/KNIGHT 80
-    (0.15Ω, (55-65))",
+    name: "испаритель PASITO 3/PASITO 2/KNIGHT 80 (0.15Ω, (55-65))",
     price: 12,
     category: "consumables",
     brand: "smoant",
@@ -423,7 +369,7 @@ const products = [
     brand: "lost mary",
     flavors: [
       "Клубничное мороженое",
-      "Клубника гуава мята",
+      "Клубника гуава мята"
     ],
     description: "5000 тяг"
   },
@@ -434,7 +380,7 @@ const products = [
     category: "disposable",
     brand: "monstervapor",
     flavors: [
-      "Белый виноград",
+      "Белый виноград"
     ],
     description: "11000 тяг"
   },
@@ -445,7 +391,7 @@ const products = [
     category: "disposable",
     brand: "husky",
     flavors: [
-      "PINK SKY",
+      "PINK SKY"
     ],
     description: "8000 тяг"
   },
@@ -456,7 +402,7 @@ const products = [
     category: "disposable",
     brand: "space pro",
     flavors: [
-      "Kentucky Tobacco",
+      "Kentucky Tobacco"
     ],
     description: "18000 тяг"
   },
@@ -468,7 +414,7 @@ const products = [
     brand: "duft",
     flavors: [
       "Пина колада",
-      "Клубничный Милкшэйк",
+      "Клубничный Милкшэйк"
     ],
     description: "7000 тяг"
   },
@@ -479,7 +425,7 @@ const products = [
     category: "disposable",
     brand: "puffmi",
     flavors: [
-      "Ванильное мороженое",
+      "Ванильное мороженое"
     ],
     description: "10000 тяг"
   },
@@ -490,7 +436,7 @@ const products = [
     category: "disposable",
     brand: "podonki bar",
     flavors: [
-      "Тянучка нуга",
+      "Тянучка нуга"
     ],
     description: "9000 тяг"
   },
@@ -501,7 +447,7 @@ const products = [
     category: "disposable",
     brand: "soak cube",
     flavors: [
-      "Имбирная хурма",
+      "Имбирная хурма"
     ],
     description: "7000 тяг"
   },
@@ -512,18 +458,18 @@ const products = [
     category: "disposable",
     brand: "udn bar",
     flavors: [
-      "Табак",
+      "Табак"
     ],
     description: "12000 тяг"
   },
   {
     id: 96,
-    name: "Lost Mary 5к тяг ",
+    name: "Lost Mary 5к тяг",
     price: 20,
     category: "disposable",
     brand: "lost mary",
     flavors: [
-      "Клубника гуава мята ",
+      "Клубника гуава мята"
     ],
     description: "5000 тяг"
   },
@@ -534,13 +480,11 @@ const products = [
     category: "disposable",
     brand: "Sim",
     flavors: [
-      "Strawberry Avocado ",
-      "Rose milk ",
-      "Ice mint ",
-      "Mulberry grape ",
+      "Strawberry Avocado",
+      "Rose milk",
+      "Ice mint",
+      "Mulberry grape"
     ],
     description: "7000 тяг"
-  },
+  }
 ];
-
-
