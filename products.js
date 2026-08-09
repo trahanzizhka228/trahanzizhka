@@ -30,6 +30,55 @@ const products = [
     description: "Снюс, крепкий"
   },
   {
+    id: 301,
+    name: "ICEBURN GHETTO",
+    price: 16,
+    category: "snus",
+    brand: "iceburn",
+    flavors: [
+      "GHOST-энергетик Байкал",
+      "DARTH VADER-перечная мята"
+    ],
+    description: "150 мг"
+  },
+  {
+    id: 302,
+    name: "ICEBERG RISING SUN ULTRA",
+    price: 16,
+    category: "snus",
+    brand: "iceberg",
+    flavors: [
+      "Кислые ягоды",
+      "Клубника-гранат",
+      "Сладкая мята"
+    ],
+    description: "150 мг"
+  },
+  {
+    id: 303,
+    name: "ICEBERG HARDCORE",
+    price: 16,
+    category: "snus",
+    brand: "iceberg",
+    flavors: [
+      "Black fury",
+      "Frozen pulse",
+      "Ice shock"
+    ],
+    description: "150мг"
+  },
+  {
+    id: 304,
+    name: "FAFF",
+    price: 16,
+    category: "snus",
+    brand: "faff",
+    flavors: [
+      "Сливочные вафли"
+    ],
+    description: "150 мг"
+  },
+  {
     id: 8,
     name: "BJORN LONG 80mg 🧛",
     price: 20,
