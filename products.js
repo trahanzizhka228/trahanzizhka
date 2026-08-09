@@ -37,8 +37,7 @@ const products = [
     brand: "jord",
     flavors: [
       "Клюква апельсин 🍊",
-      "Мандарин персик 🍑",
-      "Морс из лесных ягод"
+      "Мандарин персик 🍑"
     ],
     description: "80mg, 30мл"
   },
@@ -90,8 +89,7 @@ const products = [
     flavors: [
       "Мармеладные червячки",
       "Ледяной энергетик",
-      "Кола тамаринд лайм",
-      "Вишня ананас мята 1"
+      "Кола тамаринд лайм"
     ],
     description: "30мл"
   },
@@ -123,7 +121,6 @@ const products = [
     category: "liquid",
     brand: "jord",
     flavors: [
-      "Монстр кислые червячки",
       "Флеш оригинал",
       "Адреналин оригинал",
       "Драйв оригинал",
@@ -183,7 +180,6 @@ const products = [
     flavors: [
       "Освежающая кола",
       "Освежающий лимонад лайм мята",
-      "Холодная сладкая мята",
       "Холодное яблоко",
       "Холодный арбуз"
     ],
@@ -346,15 +342,6 @@ const products = [
   {
     id: 52,
     name: "Marlboro Red (KING SIZE)",
-    price: 10,
-    category: "cigarettes",
-    brand: "marlboro",
-    flavors: [],
-    description: "Полная пачка"
-  },
-  {
-    id: 57,
-    name: "Marlboro Brown (COMPACT)",
     price: 10,
     category: "cigarettes",
     brand: "marlboro",
