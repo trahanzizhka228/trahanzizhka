@@ -85,7 +85,15 @@ const products = [
     category: "liquid",
     brand: "jord",
     flavors: [
-      "Клюква апельсин 🍊"
+      "Клюква апельсин 🍊",
+        "Виноград арбуз",
+      "Вишня Dr Pepper",
+      "Клубника банан",
+      "Морс из лесных ягод",
+      "Мята спрайт",
+      "Энергетик черника",
+      "Ягодная жвачка"
+      
     ],
     description: "80mg, 30мл"
   },
@@ -253,23 +261,7 @@ const products = [
     ],
     description: "80 мг, 30мл"
   },
-  {
-    id: 119,
-    name: "BJORN LONG",
-    price: 20,
-    category: "liquid",
-    brand: "jord",
-    flavors: [
-      "Виноград арбуз",
-      "Вишня Dr Pepper",
-      "Клубника банан",
-      "Морс из лесных ягод",
-      "Мята спрайт",
-      "Энергетик черника",
-      "Ягодная жвачка"
-    ],
-    description: "80 мг, 30мл"
-  },
+ 
   {
     id: 201,
     name: "HOTSPOT DON'T CHEW IT 60 мг",
