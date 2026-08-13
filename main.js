@@ -284,3 +284,34 @@ document.addEventListener('DOMContentLoaded', function() {
     renderCatalog();
     updateCart();
 });
+// ========== 18+ ПРОВЕРКА ==========
+function checkAge() {
+    const confirmed = localStorage.getItem('ageConfirmed');
+    const modal = document.getElementById('age-modal');
+    if (confirmed === 'true') {
+        modal.classList.add('hidden');
+        document.body.classList.remove('age-locked');
+    } else {
+        modal.classList.remove('hidden');
+        document.body.classList.add('age-locked');
+    }
+}
+
+function confirmAge(isAdult) {
+    if (isAdult) {
+        localStorage.setItem('ageConfirmed', 'true');
+    } else {
+        window.location.href = 'https://google.com';
+        return;
+    }
+    checkAge();
+}
+
+// Обновляем DOMContentLoaded
+document.addEventListener('DOMContentLoaded', function() {
+    checkAge();
+    renderCatalog();
+    updateCart();
+});
+// ========== КОНЕЦ 18+ ==========
+
