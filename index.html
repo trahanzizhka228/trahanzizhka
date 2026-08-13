@@ -1,38 +1,27 @@
 <!DOCTYPE html>
 <html lang="ru">
+ 
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="robots" content="noindex, nofollow">
     <title>TrahanZizhka - Розово-фиолетовый каталог</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- МОДАЛЬНОЕ ОКНО ВОЗРАСТА -->
-    <div id="age-modal" class="age-modal-overlay">
-        <div class="age-modal-content">
-            <div class="age-modal-icon">🔞</div>
-            <h2>Вам есть 18 лет?</h2>
-            <p>Данный сайт содержит информацию о товарах,<br>предназначенных для лиц старше 18 лет</p>
-            <div class="age-buttons">
-                <button class="age-btn age-btn-yes" onclick="confirmAge()">✅ Да, мне есть 18</button>
-                <button class="age-btn age-btn-no" onclick="rejectAge()">❌ Нет, мне нет 18</button>
-            </div>
-        </div>
-    </div>
-
     <header>
         <h1>💜 Trahan Zizhka</h1>
         <p>Жидкости, поды, испарители и не только</p>
     </header>
-    
+
     <button class="menu-btn" onclick="toggleMenu()">☰ Каталог</button>
     <button class="cart-btn" onclick="toggleCart()">🛒 Корзина (<span id="cart-count">0</span>)</button>
-    
+
     <!-- Боковое меню -->
     <div class="sidebar" id="sidebar">
         <button class="sidebar-close" onclick="toggleMenu()">✕</button>
         <h2>📂 Категории</h2>
+                <div class="filter-section">
         <div class="filter-section">
             <h3>Тип товара:</h3>
             <label class="filter-option">
@@ -44,7 +33,7 @@
                 <span>Жидкости</span>
             </label>
             <label class="filter-option">
-                <input type="radio" name="category" value="disposable" onchange="filterProducts()">
+                <input type="radio" name="category" value="pod" onchange="filterProducts()">
                 <span>Одноразки</span>
             </label>
             <label class="filter-option">
@@ -60,7 +49,8 @@
                 <span>Снюс</span>
             </label>
         </div>
-        
+
+              <div class="filter-section">
         <div class="filter-section">
             <h3>Производитель:</h3>
             <label class="filter-option">
@@ -69,92 +59,154 @@
             </label>
             <label class="filter-option">
                 <input type="radio" name="brand" value="jord" onchange="filterProducts()">
-                <span>🔥 Jord</span>
+                <span>🔥 Jord (энергинки, жидкости)</span>
             </label>
+
             <label class="filter-option">
                 <input type="radio" name="brand" value="vaporesso" onchange="filterProducts()">
-                <span>🔧 Vaporesso</span>
+                <span>🔧 Vaporesso (картриджи)</span>
             </label>
             <label class="filter-option">
                 <input type="radio" name="brand" value="geekvape" onchange="filterProducts()">
-                <span>🔧 GeekVape</span>
+                <span>🔧 GeekVape (испарители)</span>
             </label>
             <label class="filter-option">
                 <input type="radio" name="brand" value="marlboro" onchange="filterProducts()">
-                <span>🚬 Marlboro</span>
+                <span>🚬 Marlboro (сигареты)</span>
             </label>
             <label class="filter-option">
                 <input type="radio" name="brand" value="lostmary" onchange="filterProducts()">
-                <span>☁️ Lost Mary</span>
+                <span>☁️ Lost Mary (поды)</span>
             </label>
             <label class="filter-option">
                 <input type="radio" name="brand" value="udn" onchange="filterProducts()">
-                <span>☁️ UÐN</span>
+                <span>☁️ UÐN (поды)</span>
             </label>
             <label class="filter-option">
                 <input type="radio" name="brand" value="podonki" onchange="filterProducts()">
-                <span>☁️ Podonki</span>
+                <span>☁️ Podonki </span>
             </label>
             <label class="filter-option">
                 <input type="radio" name="brand" value="duft" onchange="filterProducts()">
-                <span>☁️ Duft</span>
+                <span>☁️ Duft </span>
             </label>
             <label class="filter-option">
                 <input type="radio" name="brand" value="puffmi" onchange="filterProducts()">
-                <span>☁️ Puffmi</span>
+                <span>☁️ Puffmi </span>
             </label>
             <label class="filter-option">
                 <input type="radio" name="brand" value="husky" onchange="filterProducts()">
-                <span>☁️ Husky</span>
+                <span>☁️ Husky </span>
             </label>
             <label class="filter-option">
                 <input type="radio" name="brand" value="plonq" onchange="filterProducts()">
-                <span>☁️ Plonq</span>
+                <span>☁️ Plonq </span>
             </label>
             <label class="filter-option">
                 <input type="radio" name="brand" value="soak" onchange="filterProducts()">
-                <span>☁️ Soak</span>
+                <span>☁️ Soak </span>
             </label>
         </div>
     </div>
-    
+
     <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
-    
+
     <main class="catalog" id="catalog"></main>
-    
-    <!-- КОРЗИНА -->
+
     <div class="cart-modal" id="cart-modal">
+    <div class="cart-content">
+        <button class="cart-close" onclick="toggleCart()">✕</button>
+        <h2>🛒 Ваша корзина</h2>
+        <div id="cart-items"></div>
+        <div class="cart-total">Итого: <span id="cart-total">0</span> BYN</div>
         <div class="cart-content">
             <button class="cart-close" onclick="toggleCart()">✕</button>
             <h2>🛒 Ваша корзина</h2>
             <div id="cart-items"></div>
-            
-            <!-- БЛОК ОПЛАТЫ -->
-            <div class="payment-block">
-                <h3>💳 Оплата</h3>
-                <div class="payment-input-group">
-                    <label>Сумма заказа: <strong id="payment-total-display">0</strong> BYN</label>
-                </div>
-                <div class="payment-input-group">
-                    <label>Сколько даете?</label>
-                    <input type="number" id="payment-amount" placeholder="Введите сумму..." min="0" step="0.1" oninput="calcChange()">
-                </div>
-                <div class="payment-result" id="payment-result">
-                    <span>💰 Сдача: </span>
-                    <strong id="change-amount">0</strong> BYN
-                </div>
+            <div class="cart-total">Итого: <span id="cart-total">0</span> BYN</div>
+
+        <div class="checkout-form">
+            <input type="text" id="customer-username" placeholder="👤 Введи Telegram юзернейм" autocomplete="off">
+            <div class="checkout-form">
+                <input type="text" id="customer-username" placeholder="👤 Введи Telegram юзернейм" autocomplete="off">
+
+            <div class="payment-box">
+                <p class="payment-title">💳 Способ оплаты</p>
+                <div class="payment-box">
+                    <p class="payment-title">💳 Способ оплаты</p>
+
+                <label class="payment-option">
+                    <input type="radio" name="payment-method" value="card" onchange="handlePaymentChange()" checked>
+                    <span>Картой</span>
+                </label>
+                    <label class="payment-option">
+                        <input type="radio" name="payment-method" value="card" onchange="handlePaymentChange()" checked>
+                        <span>Картой</span>
+                    </label>
+
+                <label class="payment-option">
+                    <input type="radio" name="payment-method" value="cash" onchange="handlePaymentChange()">
+                    <span>Наличными</span>
+                </label>
             </div>
-            
+                    <label class="payment-option">
+                        <input type="radio" name="payment-method" value="cash" onchange="handlePaymentChange()">
+                        <span>Наличными</span>
+                    </label>
+                </div>
+
+            <div id="cash-amount-block" style="display:none;">
+                <input type="number" id="cash-amount" placeholder="💵 Введи сумму наличными" min="0" step="0.01">
+            </div>
+                <div id="cash-amount-block" style="display:none;">
+                    <input type="number" id="cash-amount" placeholder="💵 Введи сумму наличными" min="0" step="0.01">
+                </div>
+
             <button class="checkout-btn" onclick="checkoutToTelegram()">💜 Оформить через Telegram</button>
+                <button class="checkout-btn" onclick="checkoutToTelegram()">💜 Оформить через Telegram</button>
+            </div>
         </div>
     </div>
-    
+</div>
+
+
     <footer>
         <p>© 2026 Vape Shop Минск | Заказ: <a href="https://t.me/TrahanZizhka" target="_blank">@TrahanZizhka</a></p>
     </footer>
-    
+
     <script src="products.js"></script>
     <script src="cart.js"></script>
     <script src="main.js"></script>
+
+    <!-- Модальное окно выбора вкуса -->
+<div id="flavor-modal" class="flavor-modal">
+    <div class="flavor-content">
+        <button class="flavor-close" onclick="document.getElementById('flavor-modal').style.display='none'">×</button>
+        <h2 id="flavor-modal-title">Выберите вкус</h2>
+        <div class="flavor-price" id="flavor-modal-price"></div>
+        <div id="flavor-list"></div>
+        <button class="add-flavor-btn" onclick="addFlavoredToCart()">💜 Добавить в корзину</button>
+    <div id="flavor-modal" class="flavor-modal">
+        <div class="flavor-content">
+            <button class="flavor-close" onclick="document.getElementById('flavor-modal').style.display='none'">×</button>
+            <h2 id="flavor-modal-title">Выберите вкус</h2>
+            <div class="flavor-price" id="flavor-modal-price"></div>
+            <div id="flavor-list"></div>
+            <button class="add-flavor-btn" onclick="addFlavoredToCart()">💜 Добавить в корзину</button>
+        </div>
+    </div>
+
+    <!-- 18+ подтверждение -->
+    <div id="age-modal" class="age-modal">
+        <div class="age-content">
+            <h2>🔞 Вам уже есть 18 лет?</h2>
+            <p>Сайт содержит информацию о товарах 18+. Пожалуйста, подтвердите свой возраст.</p>
+            <div class="age-buttons">
+                <button class="age-btn yes" onclick="confirmAge(true)">✅ Да, мне есть 18</button>
+                <button class="age-btn no" onclick="confirmAge(false)">❌ Нет, мне нет 18</button>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>
