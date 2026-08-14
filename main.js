@@ -11,7 +11,6 @@ function getFilteredProducts() {
 
     return products.filter(product => {
         const categoryMatch = effectiveCategory === 'all' || product.category === effectiveCategory;
-        return categoryMatch;
         const brandMatch = currentBrand === 'all' || product.brand.toLowerCase().includes(currentBrand.toLowerCase());
         return categoryMatch && brandMatch;
     });
