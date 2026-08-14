@@ -1,3 +1,4 @@
+let cart = [];
 let currentCategory = 'all';
 let currentBrand = 'all';
 let openCardId = null;
@@ -19,6 +20,11 @@ function renderCatalog() {
     const filtered = getFilteredProducts();
     const catalog = document.getElementById('catalog');
     
+    if (!catalog) {
+        console.error('Элемент #catalog не найден');
+        return;
+    }
+
     if (filtered.length === 0) {
         catalog.innerHTML = '<div class="no-products">😕 Нет товаров в выбранной категории</div>';
         return;
@@ -333,9 +339,10 @@ document.addEventListener('keydown', function(e) {
     }
 });
 
-// ========== 18+ ПРОВЕРКА (каждый раз) ==========
+// ========== 18+ ПРОВЕРКА ==========
 function checkAge() {
     const modal = document.getElementById('age-modal');
+    if (!modal) return;
     modal.classList.remove('hidden');
     document.body.classList.add('age-locked');
 }
