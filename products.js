@@ -86,14 +86,13 @@ const products = [
     brand: "bjorn",
     flavors: [
       "Клюква апельсин 🍊",
-        "Виноград арбуз",
+      "Виноград арбуз",
       "Вишня Dr Pepper",
       "Клубника банан",
       "Морс из лесных ягод",
       "Мята спрайт",
       "Энергетик черника",
       "Ягодная жвачка"
-      
     ],
     description: "80mg, 30мл"
   },
@@ -147,7 +146,7 @@ const products = [
     name: "Монашка HOTSPOT",
     price: 18,
     category: "liquid",
-    brand: "hotspot , монашка ",
+    brand: "hotspot , монашка",
     flavors: [
       "Мармеладные червячки",
       "Ледяной энергетик",
@@ -160,7 +159,7 @@ const products = [
     name: "ЗЛАЯ МОНАШКА",
     price: 18,
     category: "liquid",
-    brand: "злая монашка ",
+    brand: "злая монашка",
     flavors: [
       "Кислый чупа чупс с холодком",
       "Энергетик арбуз",
@@ -180,7 +179,7 @@ const products = [
     name: "ЗЛАЯ ЛАБУБУ ENERGY",
     price: 16,
     category: "liquid",
-    brand: "злая лабуба ",
+    brand: "злая лабуба",
     flavors: [
       "Флеш оригинал",
       "Адреналин оригинал",
@@ -195,7 +194,7 @@ const products = [
     name: "ЗЛАЯ ЛАБУБУ EXTRA HARD",
     price: 16,
     category: "liquid",
-    brand: "злая лабуба ",
+    brand: "злая лабуба",
     flavors: [
       "Виноград малина",
       "Мятная жвачка",
@@ -261,7 +260,6 @@ const products = [
     ],
     description: "80 мг, 30мл"
   },
- 
   {
     id: 201,
     name: "HOTSPOT DON'T CHEW IT 60 мг",
