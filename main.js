@@ -1,8 +1,8 @@
 let currentCategory = 'all';
+let currentBrand = 'all';
 let openCardId = null;
 
 function getFilteredProducts() {
-    // Маппим "pod" из HTML на "disposable" из products.js
     let effectiveCategory = currentCategory;
     if (effectiveCategory === 'pod') {
         effectiveCategory = 'disposable';
@@ -10,7 +10,8 @@ function getFilteredProducts() {
 
     return products.filter(product => {
         const categoryMatch = effectiveCategory === 'all' || product.category === effectiveCategory;
-        return categoryMatch;
+        const brandMatch = currentBrand === 'all' || product.brand.toLowerCase().includes(currentBrand.toLowerCase());
+        return categoryMatch && brandMatch;
     });
 }
 
@@ -130,6 +131,10 @@ function addToCartWithFlavor(productId) {
 function filterProducts() {
     const categoryRadio = document.querySelector('input[name="category"]:checked');
     currentCategory = categoryRadio ? categoryRadio.value : 'all';
+    
+    const brandRadio = document.querySelector('input[name="brand"]:checked');
+    currentBrand = brandRadio ? brandRadio.value : 'all';
+    
     openCardId = null;
     renderCatalog();
 }
