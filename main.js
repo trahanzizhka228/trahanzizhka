@@ -2,8 +2,14 @@ let currentCategory = 'all';
 let openCardId = null;
 
 function getFilteredProducts() {
+    // Маппим "pod" из HTML на "disposable" из products.js
+    let effectiveCategory = currentCategory;
+    if (effectiveCategory === 'pod') {
+        effectiveCategory = 'disposable';
+    }
+
     return products.filter(product => {
-        const categoryMatch = currentCategory === 'all' || product.category === currentCategory;
+        const categoryMatch = effectiveCategory === 'all' || product.category === effectiveCategory;
         return categoryMatch;
     });
 }
@@ -11,26 +17,26 @@ function getFilteredProducts() {
 function renderCatalog() {
     const filtered = getFilteredProducts();
     const catalog = document.getElementById('catalog');
-
+    
     if (filtered.length === 0) {
         catalog.innerHTML = '<div class="no-products">😕 Нет товаров в выбранной категории</div>';
         return;
     }
-
+    
     const categoryNames = {
         'liquid': 'Жидкость',
-        'pod': 'Одноразка',
+        'disposable': 'Одноразка',
         'consumables': 'Расходник',
         'cigarettes': 'Сигареты',
         'snus': 'Снюс'
     };
-
+    
     catalog.innerHTML = filtered.map(product => {
         const imageId = product.id;
         const imagePath = `images/product${imageId}.jpg`;
         const hasFlavors = product.flavors && product.flavors.length > 0;
         const isOpen = openCardId === product.id;
-
+        
         let flavorsHtml = '';
         if (hasFlavors && isOpen) {
             flavorsHtml = `
@@ -48,7 +54,7 @@ function renderCatalog() {
                 </div>
             `;
         }
-
+        
         return `
             <div class="product-card ${hasFlavors ? 'has-flavors' : ''} ${isOpen ? 'open' : ''}">
                 <div class="product-header" onclick="${hasFlavors ? `toggleCard(${product.id})` : ''}">
@@ -75,7 +81,7 @@ function renderCatalog() {
 function toggleCard(productId) {
     const product = products.find(p => p.id === productId);
     if (!product || !product.flavors || product.flavors.length === 0) return;
-
+    
     if (openCardId === productId) {
         openCardId = null;
     } else {
@@ -87,36 +93,36 @@ function toggleCard(productId) {
 function addToCartWithFlavor(productId) {
     const product = products.find(p => p.id === productId);
     if (!product) return;
-
+    
     if (!product.flavors || product.flavors.length === 0) {
         addToCart(productId);
         return;
     }
-
+    
     const flavorSelect = document.querySelector(`input[name="flavor-${productId}"]:checked`);
     if (!flavorSelect || flavorSelect.value === '') {
         alert('⛔ Выбери вкус!');
         return;
     }
-
+    
     const flavorIndex = parseInt(flavorSelect.value);
     const flavorName = product.flavors[flavorIndex];
     const uniqueId = `${productId}_${flavorIndex}`;
-
+    
     const cartItem = {
         id: uniqueId,
         name: `${product.name} — ${flavorName}`,
         price: product.price,
         quantity: 1
     };
-
+    
     const existing = cart.find(item => item.id === uniqueId);
     if (existing) {
         existing.quantity++;
     } else {
         cart.push(cartItem);
     }
-
+    
     updateCart();
     alert(`✅ Добавлено: ${cartItem.name}`);
 }
@@ -145,14 +151,14 @@ function toggleCart() {
 
 function renderCartWithEdit() {
     document.getElementById('cart-count').textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
-
+    
     const cartItems = document.getElementById('cart-items');
     if (cart.length === 0) {
         cartItems.innerHTML = '<p class="empty-cart">😔 Корзина пуста</p>';
         document.getElementById('cart-total').textContent = 0;
         return;
     }
-
+    
     cartItems.innerHTML = cart.map(item => `
         <div class="cart-item">
             <div class="cart-item-info">
@@ -169,7 +175,7 @@ function renderCartWithEdit() {
             </div>
         </div>
     `).join('');
-
+    
     const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     document.getElementById('cart-total').textContent = total;
 }
@@ -228,20 +234,45 @@ function decreaseQtyFromId(id) {
     }
 }
 
+function handlePaymentChange() {
+    const method = document.querySelector('input[name="payment-method"]:checked')?.value;
+    const cashBlock = document.getElementById('cash-amount-block');
+    const cashInput = document.getElementById('cash-amount');
+
+    if (method === 'cash') {
+        cashBlock.style.display = 'block';
+        cashInput.required = true;
+    } else {
+        cashBlock.style.display = 'none';
+        cashInput.required = false;
+        cashInput.value = '';
+    }
+}
+
 function checkoutToTelegram() {
     if (cart.length === 0) {
         alert('📦 Корзина пуста!');
         return;
     }
 
-    // Получаем юзернейм из input-поля
     const username = document.getElementById('customer-username')?.value.trim();
     if (!username) {
         alert('⛔ Введи свой юзернейм Telegram!');
         return;
     }
 
-    // Получаем текущую дату и время
+    const paymentMethod = document.querySelector('input[name="payment-method"]:checked')?.value || 'card';
+    const cashAmountInput = document.getElementById('cash-amount');
+    let cashAmount = 0;
+
+    if (paymentMethod === 'cash') {
+        cashAmount = parseFloat(cashAmountInput?.value || '0');
+        if (!cashAmount || cashAmount <= 0) {
+            alert('⛔ Введи сумму наличными!');
+            return;
+        }
+    }
+
     const now = new Date();
     const day = now.getDate().toString().padStart(2, '0');
     const month = (now.getMonth() + 1).toString().padStart(2, '0');
@@ -253,6 +284,7 @@ function checkoutToTelegram() {
     const timeString = `${hours}:${minutes}`;
 
     const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
     let message = '🛒 ЗАКАЗ TRAHAN ZIZHKA%0A%0A';
     message += `📅 Дата: ${dateString}%0A`;
     message += `⏰ Время: ${timeString}%0A`;
@@ -261,7 +293,23 @@ function checkoutToTelegram() {
     cart.forEach(item => {
         message += `▪️ ${item.name} × ${item.quantity} = ${item.price * item.quantity} BYN%0A`;
     });
-    message += `%0A💰 ИТОГО: ${total} BYN%0A%0A✅ Подтвержаю!`;
+    message += `%0A💰 ИТОГО: ${total} BYN%0A`;
+
+    if (paymentMethod === 'card') {
+        message += '%0A💳 Оплата: Картой%0A';
+    } else {
+        const change = cashAmount - total;
+        message += `%0A💵 Оплата: Наличными%0A`;
+        message += `🤲 Клиент даёт: ${cashAmount.toFixed(2)} BYN%0A`;
+        if (change >= 0) {
+            message += `🔁 Сдача: ${change.toFixed(2)} BYN%0A`;
+        } else {
+            message += `⚠️ Не хватает: ${Math.abs(change).toFixed(2)} BYN%0A`;
+        }
+    }
+
+    message += '%0A✅ Подтвержаю!';
+
     window.open(`https://t.me/TrahanZizhka?text=${message}`, '_blank');
     alert('✅ Заказ отправлен!');
     cart = [];
@@ -280,34 +328,23 @@ document.addEventListener('keydown', function(e) {
     }
 });
 
-document.addEventListener('DOMContentLoaded', function() {
-    renderCatalog();
-    updateCart();
-});
-// ========== 18+ ПРОВЕРКА ==========
+// ========== 18+ ПРОВЕРКА (каждый раз) ==========
 function checkAge() {
-    const confirmed = localStorage.getItem('ageConfirmed');
     const modal = document.getElementById('age-modal');
-    if (confirmed === 'true') {
-        modal.classList.add('hidden');
-        document.body.classList.remove('age-locked');
-    } else {
-        modal.classList.remove('hidden');
-        document.body.classList.add('age-locked');
-    }
+    modal.classList.remove('hidden');
+    document.body.classList.add('age-locked');
 }
 
 function confirmAge(isAdult) {
     if (isAdult) {
-        localStorage.setItem('ageConfirmed', 'true');
+        const modal = document.getElementById('age-modal');
+        modal.classList.add('hidden');
+        document.body.classList.remove('age-locked');
     } else {
-        window.location.href = 'https://google.com';
-        return;
+        window.location.href = 'https://www.youtube.com/results?search_query=мультфильмы';
     }
-    checkAge();
 }
 
-// Обновляем DOMContentLoaded
 document.addEventListener('DOMContentLoaded', function() {
     checkAge();
     renderCatalog();
