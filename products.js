@@ -4,7 +4,7 @@ const products = [
     name: "D.L.T.A ☠️",
     price: 16,
     category: "snus",
-    brand: "jord",
+    brand: "D.L.T.A",
     flavors: [
       "Red Bull 🐂",
       "Adrenaline RUSH PEPSI 💙",
@@ -22,7 +22,7 @@ const products = [
     name: "D.L.T.A XS ☠️",
     price: 16,
     category: "snus",
-    brand: "jord",
+    brand: "D.L.T.A",
     flavors: [
       "Микс ягод",
       "Зеленый виноград мята"
@@ -83,7 +83,7 @@ const products = [
     name: "BJORN LONG 80mg 🧛",
     price: 20,
     category: "liquid",
-    brand: "jord",
+    brand: "bjorn",
     flavors: [
       "Клюква апельсин 🍊",
         "Виноград арбуз",
@@ -102,7 +102,7 @@ const products = [
     name: "BJORN ТЕМНЫЙ ХОР",
     price: 20,
     category: "liquid",
-    brand: "jord",
+    brand: "bjorn",
     flavors: [
       "Арбуз лед",
       "Арбуз мята",
@@ -121,7 +121,7 @@ const products = [
     name: "BJORN СОН ПРИЗРАКА",
     price: 20,
     category: "liquid",
-    brand: "jord",
+    brand: "bjorn",
     flavors: [
       "Ледяная клубника личи",
       "Манго со льдом",
@@ -136,7 +136,7 @@ const products = [
     name: "САМОУБИЙЦА V2 DANGER ⚡️",
     price: 18,
     category: "liquid",
-    brand: "jord",
+    brand: "самоубийцы",
     flavors: [
       "Арбузно дынный фреш 🤩"
     ],
@@ -147,7 +147,7 @@ const products = [
     name: "Монашка HOTSPOT",
     price: 18,
     category: "liquid",
-    brand: "jord",
+    brand: "hotspot , монашка ",
     flavors: [
       "Мармеладные червячки",
       "Ледяной энергетик",
@@ -160,7 +160,7 @@ const products = [
     name: "ЗЛАЯ МОНАШКА",
     price: 18,
     category: "liquid",
-    brand: "jord",
+    brand: "злая монашка ",
     flavors: [
       "Кислый чупа чупс с холодком",
       "Энергетик арбуз",
@@ -180,7 +180,7 @@ const products = [
     name: "ЗЛАЯ ЛАБУБУ ENERGY",
     price: 16,
     category: "liquid",
-    brand: "jord",
+    brand: "злая лабуба ",
     flavors: [
       "Флеш оригинал",
       "Адреналин оригинал",
@@ -195,7 +195,7 @@ const products = [
     name: "ЗЛАЯ ЛАБУБУ EXTRA HARD",
     price: 16,
     category: "liquid",
-    brand: "jord",
+    brand: "злая лабуба ",
     flavors: [
       "Виноград малина",
       "Мятная жвачка",
@@ -212,7 +212,7 @@ const products = [
     name: "DOGSWILL",
     price: 15,
     category: "liquid",
-    brand: "jord",
+    brand: "dogswill",
     flavors: [
       "Mountain dew",
       "Виноград черника смородина",
@@ -227,7 +227,7 @@ const products = [
     name: "ANIMMA LOVE KILLER",
     price: 17,
     category: "liquid",
-    brand: "jord",
+    brand: "anima",
     flavors: [
       "Арбузный смузи",
       "Банан клубника",
@@ -249,7 +249,7 @@ const products = [
     name: "BJORN JOKER 🃏",
     price: 20,
     category: "liquid",
-    brand: "jord",
+    brand: "bjorn",
     flavors: [
       "Арбуз дыня",
       "Виноград черная смородина",
@@ -267,7 +267,7 @@ const products = [
     name: "HOTSPOT DON'T CHEW IT 60 мг",
     price: 14,
     category: "liquid",
-    brand: "jord",
+    brand: "hotspot",
     flavors: [
       "Жвачка арбуз",
       "Жвачка зеленое яблоко",
@@ -283,7 +283,7 @@ const products = [
     name: "HOTSPOT DOT 60 мг",
     price: 14,
     category: "liquid",
-    brand: "jord",
+    brand: "hotspot",
     flavors: [
       "Банан лайм",
       "Клубника мята",
@@ -297,7 +297,7 @@ const products = [
     name: "HOTSPOT FUEL 60 мг",
     price: 14,
     category: "liquid",
-    brand: "jord",
+    brand: "hotspot",
     flavors: [
       "Дыня черника",
       "Смородина мята"
@@ -309,7 +309,7 @@ const products = [
     name: "HOTSPOT x PODONKI 60 мг",
     price: 14,
     category: "liquid",
-    brand: "jord",
+    brand: "hotspot , podonki",
     flavors: [
       "Освежающая кола",
       "Освежающий лимонад лайм мята",
@@ -323,7 +323,7 @@ const products = [
     name: "PODONKI INFERNO",
     price: 16,
     category: "liquid",
-    brand: "jord",
+    brand: "podonki",
     flavors: [
       "Клубника банан",
       "Вишня слива груша",
@@ -337,7 +337,7 @@ const products = [
     name: "BJORN ZLOY V2.0",
     price: 16,
     category: "liquid",
-    brand: "jord",
+    brand: "bjorn",
     flavors: [
       "Мармелад маршмеллоу",
       "Вишня клубника",
@@ -355,7 +355,7 @@ const products = [
     name: "CATSWILL X MONSTERVAPOR",
     price: 18,
     category: "liquid",
-    brand: "jord",
+    brand: "catswill",
     flavors: [
       "Виноградно-вишневый холм лед",
       "Красное сладкое яблоко с кислинкой"
@@ -367,7 +367,7 @@ const products = [
     name: "ANNIMA LOVE ZOMBIE",
     price: 17,
     category: "liquid",
-    brand: "jord",
+    brand: "anima",
     flavors: [
       "Яблоко виноград",
       "Клубничный леденец",
@@ -384,7 +384,7 @@ const products = [
     name: "ANNIMA LOVE SOUR",
     price: 16,
     category: "liquid",
-    brand: "jord",
+    brand: "anima",
     flavors: [
       "Кислая черника апельсин",
       "Кислая черника малина",
