@@ -1,9 +1,9 @@
-let cart = [];
 let currentCategory = 'all';
 let currentBrand = 'all';
 let openCardId = null;
 
 function getFilteredProducts() {
+    // Маппим "pod" из HTML на "disposable" из products.js
     let effectiveCategory = currentCategory;
     if (effectiveCategory === 'pod') {
         effectiveCategory = 'disposable';
@@ -11,6 +11,7 @@ function getFilteredProducts() {
 
     return products.filter(product => {
         const categoryMatch = effectiveCategory === 'all' || product.category === effectiveCategory;
+        return categoryMatch;
         const brandMatch = currentBrand === 'all' || product.brand.toLowerCase().includes(currentBrand.toLowerCase());
         return categoryMatch && brandMatch;
     });
@@ -19,17 +20,12 @@ function getFilteredProducts() {
 function renderCatalog() {
     const filtered = getFilteredProducts();
     const catalog = document.getElementById('catalog');
-    
-    if (!catalog) {
-        console.error('Элемент #catalog не найден');
-        return;
-    }
 
     if (filtered.length === 0) {
         catalog.innerHTML = '<div class="no-products">😕 Нет товаров в выбранной категории</div>';
         return;
     }
-    
+
     const categoryNames = {
         'liquid': 'Жидкость',
         'disposable': 'Одноразка',
@@ -37,13 +33,13 @@ function renderCatalog() {
         'cigarettes': 'Сигареты',
         'snus': 'Снюс'
     };
-    
+
     catalog.innerHTML = filtered.map(product => {
         const imageId = product.id;
         const imagePath = `images/product${imageId}.jpg`;
         const hasFlavors = product.flavors && product.flavors.length > 0;
         const isOpen = openCardId === product.id;
-        
+
         let flavorsHtml = '';
         if (hasFlavors && isOpen) {
             flavorsHtml = `
@@ -61,7 +57,7 @@ function renderCatalog() {
                 </div>
             `;
         }
-        
+
         return `
             <div class="product-card ${hasFlavors ? 'has-flavors' : ''} ${isOpen ? 'open' : ''}">
                 <div class="product-header" onclick="${hasFlavors ? `toggleCard(${product.id})` : ''}">
@@ -88,7 +84,7 @@ function renderCatalog() {
 function toggleCard(productId) {
     const product = products.find(p => p.id === productId);
     if (!product || !product.flavors || product.flavors.length === 0) return;
-    
+
     if (openCardId === productId) {
         openCardId = null;
     } else {
@@ -100,36 +96,36 @@ function toggleCard(productId) {
 function addToCartWithFlavor(productId) {
     const product = products.find(p => p.id === productId);
     if (!product) return;
-    
+
     if (!product.flavors || product.flavors.length === 0) {
         addToCart(productId);
         return;
     }
-    
+
     const flavorSelect = document.querySelector(`input[name="flavor-${productId}"]:checked`);
     if (!flavorSelect || flavorSelect.value === '') {
         alert('⛔ Выбери вкус!');
         return;
     }
-    
+
     const flavorIndex = parseInt(flavorSelect.value);
     const flavorName = product.flavors[flavorIndex];
     const uniqueId = `${productId}_${flavorIndex}`;
-    
+
     const cartItem = {
         id: uniqueId,
         name: `${product.name} — ${flavorName}`,
         price: product.price,
         quantity: 1
     };
-    
+
     const existing = cart.find(item => item.id === uniqueId);
     if (existing) {
         existing.quantity++;
     } else {
         cart.push(cartItem);
     }
-    
+
     updateCart();
     alert(`✅ Добавлено: ${cartItem.name}`);
 }
@@ -162,14 +158,14 @@ function toggleCart() {
 
 function renderCartWithEdit() {
     document.getElementById('cart-count').textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
-    
+
     const cartItems = document.getElementById('cart-items');
     if (cart.length === 0) {
         cartItems.innerHTML = '<p class="empty-cart">😔 Корзина пуста</p>';
         document.getElementById('cart-total').textContent = 0;
         return;
     }
-    
+
     cartItems.innerHTML = cart.map(item => `
         <div class="cart-item">
             <div class="cart-item-info">
@@ -186,7 +182,7 @@ function renderCartWithEdit() {
             </div>
         </div>
     `).join('');
-    
+
     const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     document.getElementById('cart-total').textContent = total;
 }
@@ -339,10 +335,9 @@ document.addEventListener('keydown', function(e) {
     }
 });
 
-// ========== 18+ ПРОВЕРКА ==========
+// ========== 18+ ПРОВЕРКА (каждый раз) ==========
 function checkAge() {
     const modal = document.getElementById('age-modal');
-    if (!modal) return;
     modal.classList.remove('hidden');
     document.body.classList.add('age-locked');
 }
