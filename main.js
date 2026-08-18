@@ -522,4 +522,83 @@ function logoutProfile() {
     localStorage.removeItem('tg_user');
     renderProfile();
     alert('👋 Вы вышли из профиля');
+}function getTelegramUser() {
+    if (!window.Telegram || !Telegram.WebApp) {
+        return null;
+    }
+
+    Telegram.WebApp.ready();
+
+    return Telegram.WebApp.initDataUnsafe?.user || null;
+}
+
+function openProfileTab() {
+    const modal = document.getElementById('profile-modal');
+
+    if (!modal) {
+        return;
+    }
+
+    modal.style.display = 'flex';
+    renderProfile();
+}
+
+function closeProfileTab() {
+    document.getElementById('profile-modal').style.display = 'none';
+}
+
+function renderProfile() {
+    const user = getTelegramUser();
+
+    const loginBlock = document.getElementById('profile-login');
+    const userBlock = document.getElementById('profile-user');
+
+    if (!user) {
+        loginBlock.style.display = 'block';
+        userBlock.style.display = 'none';
+        return;
+    }
+
+    loginBlock.style.display = 'none';
+    userBlock.style.display = 'block';
+
+    const name = [user.first_name, user.last_name]
+        .filter(Boolean)
+        .join(' ');
+
+    document.getElementById('profile-name').textContent = name || 'Пользователь';
+
+    document.getElementById('profile-username').textContent =
+        user.username ? `@${user.username}` : 'Username не указан';
+
+    document.getElementById('profile-id').textContent = user.id;
+
+    const avatar = document.getElementById('profile-avatar');
+
+    if (user.photo_url) {
+        avatar.src = user.photo_url;
+        avatar.style.display = 'block';
+    } else {
+        avatar.src = 'images/default-avatar.png';
+    }
+
+    const stats = getOrderStats(user.id);
+    document.getElementById('profile-orders').textContent = stats.orders;
+    document.getElementById('profile-spent').textContent = stats.spent;
+}
+
+function refreshProfile() {
+    renderProfile();
+}
+
+function copyTelegramId() {
+    const id = document.getElementById('profile-id').textContent;
+
+    navigator.clipboard.writeText(id)
+        .then(() => alert('✅ Telegram ID скопирован'))
+        .catch(() => alert('Не удалось скопировать Telegram ID'));
+}
+
+function logoutProfile() {
+    alert('Профиль Telegram нельзя отключить вручную: он берётся из аккаунта, через который открыт Mini App.');
 }
