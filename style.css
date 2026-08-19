@@ -1425,4 +1425,58 @@ body.age-locked {
 .profile-mini-card p {
     color: #aaa0b7;
     line-height: 1.5;
+}/* Промокоды */
+.promo-box {
+    margin-top: 18px;
+    padding: 16px;
+    border: 1px solid rgba(202, 69, 255, 0.45);
+    border-radius: 18px;
+    background: rgba(166, 50, 255, 0.08);
+    text-align: left;
 }
+
+.promo-box h3 {
+    margin: 0 0 8px;
+    color: #fff;
+    font-size: 18px;
+}
+
+.promo-box p {
+    margin: 0 0 12px;
+    color: #bcb2c8;
+    font-size: 14px;
+}
+
+.promo-form {
+    display: flex;
+    gap: 8px;
+}
+
+.promo-form input {
+    min-width: 0;
+    flex: 1;
+    padding: 11px 12px;
+    border: 1px solid #7433a2;
+    border-radius: 11px;
+    outline: none;
+    background: #100d16;
+    color: #fff;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.promo-form button {
+    border: 0;
+    border-radius: 11px;
+    padding: 10px 13px;
+    background: #bd47ed;
+    color: #fff;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.promo-form button:disabled {
+    cursor: default;
+    opacity: 0.55;
+}
+

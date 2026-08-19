@@ -1,3 +1,12 @@
+const SUPABASE_URL = 'https://jqrjybptkhspfgbhvalo.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_RDMAZ6lxzNWSShrdgDs0ug_d9nTPAcD';
+
+const supabaseClient = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+);
+
+let activePromo = null;
 let currentCategory = 'all';
 let currentBrand = 'all';
 let openCardId = null;
@@ -182,7 +191,8 @@ function renderCartWithEdit() {
         </div>
     `).join('');
 
-    const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+const totals = getCartTotals();
+const total = totals.total;
     document.getElementById('cart-total').textContent = total;
 }
 
@@ -299,7 +309,14 @@ function checkoutToTelegram() {
     cart.forEach(item => {
         message += `▪️ ${item.name} × ${item.quantity} = ${item.price * item.quantity} BYN%0A`;
     });
-    message += `%0A💰 ИТОГО: ${total} BYN%0A`;
+   message += `%0A💰 Сумма без скидки: ${totals.subtotal} BYN%0A`;
+
+if (totals.discountPercent) {
+    message += `🎟 Промокод: ${activePromo.code}%0A`;
+    message += `📉 Скидка: −${totals.discountAmount} BYN (${totals.discountPercent}%)%0A`;
+}
+
+message += `💜 К оплате: ${total} BYN%0A`;
 
     if (paymentMethod === 'card') {
         message += '%0A💳 Оплата: Картой%0A';
@@ -572,7 +589,7 @@ function renderProfile() {
         user.username ? `@${user.username}` : 'Username не указан';
 
     document.getElementById('profile-id').textContent = user.id;
-
+loadActivePromo();
     const avatar = document.getElementById('profile-avatar');
 
     if (user.photo_url) {
@@ -601,4 +618,129 @@ function copyTelegramId() {
 
 function logoutProfile() {
     alert('Профиль Telegram нельзя отключить вручную: он берётся из аккаунта, через который открыт Mini App.');
+}// ========== ПРОМОКОДЫ ==========
+
+function getCurrentTelegramUser() {
+    return window.Telegram?.WebApp?.initDataUnsafe?.user || null;
+}
+
+function updatePromoInterface() {
+    const status = document.getElementById('promo-status');
+    const input = document.getElementById('promo-input');
+
+    if (!status || !input) return;
+
+    if (activePromo) {
+        status.textContent = `✅ Код ${activePromo.code}: скидка ${activePromo.discountPercent}% активна`;
+        status.style.color = '#63e6be';
+        input.value = activePromo.code;
+        input.disabled = true;
+    } else {
+        status.textContent = 'Введи код, чтобы получить скидку.';
+        status.style.color = '';
+        input.disabled = false;
+    }
+}
+
+async function activatePromoCode() {
+    const user = getCurrentTelegramUser();
+
+    if (!user?.id) {
+        alert('⛔ Открой магазин через кнопку Mini App в Telegram-боте, чтобы активировать промокод.');
+        return;
+    }
+
+    const input = document.getElementById('promo-input');
+    const code = input?.value.trim().toUpperCase();
+
+    if (!code) {
+        alert('⛔ Введи промокод.');
+        return;
+    }
+
+    const button = document.querySelector('.promo-form button');
+    if (button) {
+        button.disabled = true;
+        button.textContent = 'Проверяем...';
+    }
+
+    try {
+        const { data, error } = await supabaseClient.rpc('activate_promo_code', {
+            p_code: code,
+            p_telegram_id: user.id
+        });
+
+        if (error) {
+            console.error(error);
+            alert('⛔ Ошибка подключения к промокодам. Проверь консоль.');
+            return;
+        }
+
+        if (!data?.ok) {
+            alert(`⛔ ${data?.message || 'Не удалось активировать промокод'}`);
+            return;
+        }
+
+        activePromo = {
+            code: data.code,
+            discountPercent: Number(data.discount_percent)
+        };
+
+        localStorage.setItem(
+            `active_promo_${user.id}`,
+            JSON.stringify(activePromo)
+        );
+
+        updatePromoInterface();
+        alert(`✅ Промокод активирован. Скидка ${activePromo.discountPercent}% применится в корзине.`);
+    } finally {
+        if (button) {
+            button.disabled = Boolean(activePromo);
+            button.textContent = activePromo ? 'Активирован' : 'Активировать';
+        }
+    }
+}
+
+function loadActivePromo() {
+    const user = getCurrentTelegramUser();
+
+    if (!user?.id) {
+        activePromo = null;
+        updatePromoInterface();
+        return;
+    }
+
+    const savedPromo = localStorage.getItem(`active_promo_${user.id}`);
+
+    if (!savedPromo) {
+        activePromo = null;
+        updatePromoInterface();
+        return;
+    }
+
+    try {
+        activePromo = JSON.parse(savedPromo);
+    } catch {
+        activePromo = null;
+    }
+
+    updatePromoInterface();
+}
+
+function getCartTotals() {
+    const subtotal = cart.reduce(
+        (sum, item) => sum + item.price * item.quantity,
+        0
+    );
+
+    const discountPercent = activePromo?.discountPercent || 0;
+    const discountAmount = Math.round(subtotal * discountPercent) / 100;
+    const total = Math.max(0, subtotal - discountAmount);
+
+    return {
+        subtotal,
+        discountPercent,
+        discountAmount,
+        total
+    };
 }
