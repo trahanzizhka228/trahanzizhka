@@ -11,6 +11,18 @@ let currentCategory = 'all';
 let currentBrand = 'all';
 let openCardId = null;
 
+// ========== НАВИГАЦИЯ ==========
+
+function setActiveTab(tabId) {
+    document.querySelectorAll('.nav-tab').forEach(tab => {
+        tab.classList.remove('active');
+    });
+
+    document.getElementById(tabId)?.classList.add('active');
+}
+
+// ========== КАТАЛОГ И ФИЛЬТРЫ ==========
+
 function getFilteredProducts() {
     const effectiveCategory = currentCategory === 'pod'
         ? 'disposable'
@@ -39,7 +51,11 @@ function renderCatalog() {
     const filtered = getFilteredProducts();
 
     if (filtered.length === 0) {
-        catalog.innerHTML = '<div class="no-products">😕 Нет товаров по выбранным фильтрам</div>';
+        catalog.innerHTML = `
+            <div class="no-products">
+                😕 Нет товаров по выбранным фильтрам
+            </div>
+        `;
         return;
     }
 
@@ -53,20 +69,33 @@ function renderCatalog() {
 
     catalog.innerHTML = filtered.map(product => {
         const imagePath = `images/product${product.id}.jpg`;
-        const hasFlavors = Array.isArray(product.flavors) && product.flavors.length > 0;
+
+        const hasFlavors =
+            Array.isArray(product.flavors) &&
+            product.flavors.length > 0;
+
         const isOpen = openCardId === product.id;
 
         const flavorsHtml = hasFlavors && isOpen
             ? `
                 <div class="flavors-dropdown">
                     <label class="flavor-select">
-                        <input type="radio" name="flavor-${product.id}" value="" checked>
+                        <input
+                            type="radio"
+                            name="flavor-${product.id}"
+                            value=""
+                            checked
+                        >
                         <span>Выберите вкус...</span>
                     </label>
 
                     ${product.flavors.map((flavor, index) => `
                         <label class="flavor-select">
-                            <input type="radio" name="flavor-${product.id}" value="${index}">
+                            <input
+                                type="radio"
+                                name="flavor-${product.id}"
+                                value="${index}"
+                            >
                             <span>${flavor}</span>
                         </label>
                     `).join('')}
@@ -76,7 +105,10 @@ function renderCatalog() {
 
         return `
             <div class="product-card ${hasFlavors ? 'has-flavors' : ''} ${isOpen ? 'open' : ''}">
-                <div class="product-header" onclick="${hasFlavors ? `toggleCard(${product.id})` : ''}">
+                <div
+                    class="product-header"
+                    onclick="${hasFlavors ? `toggleCard(${product.id})` : ''}"
+                >
                     <div class="product-image" data-product-name="${product.name}">
                         <img
                             src="${imagePath}"
@@ -91,7 +123,12 @@ function renderCatalog() {
                         </span>
 
                         ${hasFlavors
-                            ? `<span class="flavors-count">🍬 ${product.flavors.length} вкусов ${isOpen ? '▲' : '▼'}</span>`
+                            ? `
+                                <span class="flavors-count">
+                                    🍬 ${product.flavors.length} вкусов
+                                    ${isOpen ? '▲' : '▼'}
+                                </span>
+                            `
                             : ''
                         }
 
@@ -103,7 +140,10 @@ function renderCatalog() {
 
                 ${flavorsHtml}
 
-                <button class="add-btn" onclick="addToCartWithFlavor(${product.id})">
+                <button
+                    class="add-btn"
+                    onclick="addToCartWithFlavor(${product.id})"
+                >
                     💜 ${hasFlavors
                         ? (isOpen ? 'Добавить' : 'Выбрать вкус')
                         : 'Добавить в корзину'
@@ -119,9 +159,37 @@ function toggleCard(productId) {
 
     if (!product || !product.flavors?.length) return;
 
-    openCardId = openCardId === productId ? null : productId;
+    openCardId = openCardId === productId
+        ? null
+        : productId;
+
     renderCatalog();
 }
+
+function filterProducts() {
+    const categoryRadio = document.querySelector(
+        'input[name="category"]:checked'
+    );
+
+    const brandRadio = document.querySelector(
+        'input[name="brand"]:checked'
+    );
+
+    currentCategory = categoryRadio?.value || 'all';
+    currentBrand = brandRadio?.value || 'all';
+    openCardId = null;
+
+    renderCatalog();
+}
+
+function toggleMenu() {
+    setActiveTab('catalog-tab');
+
+    document.getElementById('sidebar')?.classList.toggle('active');
+    document.getElementById('overlay')?.classList.toggle('active');
+}
+
+// ========== КОРЗИНА ==========
 
 function addToCartWithFlavor(productId) {
     const product = products.find(item => item.id === productId);
@@ -160,6 +228,7 @@ function addToCartWithFlavor(productId) {
     }
 
     updateCart();
+
     alert(`✅ Добавлено: ${product.name} — ${flavorName}`);
 }
 
@@ -182,34 +251,18 @@ function addToCart(productId) {
     updateCart();
 }
 
-function filterProducts() {
-    const categoryRadio = document.querySelector(
-        'input[name="category"]:checked'
-    );
-
-    const brandRadio = document.querySelector(
-        'input[name="brand"]:checked'
-    );
-
-    currentCategory = categoryRadio?.value || 'all';
-    currentBrand = brandRadio?.value || 'all';
-    openCardId = null;
-
-    renderCatalog();
-}
-
-function toggleMenu() {
-    document.getElementById('sidebar')?.classList.toggle('active');
-    document.getElementById('overlay')?.classList.toggle('active');
-}
-
 function toggleCart() {
+    setActiveTab('cart-tab');
+
     const modal = document.getElementById('cart-modal');
 
     if (!modal) return;
 
     const isOpen = modal.style.display === 'flex';
-    modal.style.display = isOpen ? 'none' : 'flex';
+
+    modal.style.display = isOpen
+        ? 'none'
+        : 'flex';
 
     if (!isOpen) {
         renderCartWithEdit();
@@ -218,13 +271,24 @@ function toggleCart() {
 
 function getCartTotals() {
     const subtotal = cart.reduce(
-        (sum, item) => sum + Number(item.price) * Number(item.quantity),
+        (sum, item) => {
+            return sum + Number(item.price) * Number(item.quantity);
+        },
         0
     );
 
-    const discountPercent = Number(activePromo?.discountPercent || 0);
-    const discountAmount = Math.round(subtotal * discountPercent) / 100;
-    const total = Math.max(0, subtotal - discountAmount);
+    const discountPercent = Number(
+        activePromo?.discountPercent || 0
+    );
+
+    const discountAmount = Math.round(
+        subtotal * discountPercent
+    ) / 100;
+
+    const total = Math.max(
+        0,
+        subtotal - discountAmount
+    );
 
     return {
         subtotal,
@@ -241,11 +305,19 @@ function renderCartWithEdit() {
     if (!cartItems || !cartTotal) return;
 
     if (cart.length === 0) {
-        cartItems.innerHTML = '<p class="empty-cart">😔 Корзина пуста</p>';
+        cartItems.innerHTML = `
+            <p class="empty-cart">😔 Корзина пуста</p>
+        `;
+
         cartTotal.textContent = '0';
 
-        const oldDiscountLine = document.getElementById('cart-discount-line');
-        if (oldDiscountLine) oldDiscountLine.remove();
+        const oldDiscountLine = document.getElementById(
+            'cart-discount-line'
+        );
+
+        if (oldDiscountLine) {
+            oldDiscountLine.remove();
+        }
 
         return;
     }
@@ -253,10 +325,13 @@ function renderCartWithEdit() {
     cartItems.innerHTML = cart.map(item => `
         <div class="cart-item">
             <div class="cart-item-info">
-                <div class="cart-item-title">${item.name}</div>
+                <div class="cart-item-title">
+                    ${item.name}
+                </div>
 
                 <div class="cart-item-price">
                     ${item.price} BYN ×
+
                     <input
                         type="number"
                         class="qty-input"
@@ -264,35 +339,75 @@ function renderCartWithEdit() {
                         min="1"
                         max="99"
                         onchange="updateQtyDirect('${item.id}', this.value)"
-                        style="width: 60px; padding: 5px; border-radius: 8px; border: 2px solid #ff6edb; background: #2d1b4e; color: #fff; font-weight: bold; text-align: center; margin-left: 8px;"
+                        style="
+                            width: 60px;
+                            padding: 5px;
+                            border-radius: 8px;
+                            border: 2px solid #ff6edb;
+                            background: #2d1b4e;
+                            color: #fff;
+                            font-weight: bold;
+                            text-align: center;
+                            margin-left: 8px;
+                        "
                     >
                 </div>
 
-                <div style="color: #c48bff; font-size: 0.9em; margin-top: 5px;">
-                    Итого: ${Number(item.price) * Number(item.quantity)} BYN
+                <div style="
+                    color: #c48bff;
+                    font-size: 0.9em;
+                    margin-top: 5px;
+                ">
+                    Итого:
+                    ${Number(item.price) * Number(item.quantity)} BYN
                 </div>
             </div>
 
             <div class="cart-item-quantity">
-                <button class="qty-btn" onclick="decreaseQtyFromId('${item.id}')">-</button>
-                <span style="color: #fff; font-weight: bold; min-width: 30px; text-align: center;">
+                <button
+                    class="qty-btn"
+                    onclick="decreaseQtyFromId('${item.id}')"
+                >
+                    -
+                </button>
+
+                <span style="
+                    color: #fff;
+                    font-weight: bold;
+                    min-width: 30px;
+                    text-align: center;
+                ">
                     ${item.quantity}
                 </span>
-                <button class="qty-btn" onclick="increaseQtyFromId('${item.id}')">+</button>
+
+                <button
+                    class="qty-btn"
+                    onclick="increaseQtyFromId('${item.id}')"
+                >
+                    +
+                </button>
             </div>
         </div>
     `).join('');
 
     const totals = getCartTotals();
+
     cartTotal.textContent = totals.total.toFixed(2);
 
-    let discountLine = document.getElementById('cart-discount-line');
+    let discountLine = document.getElementById(
+        'cart-discount-line'
+    );
 
     if (!discountLine) {
         discountLine = document.createElement('div');
         discountLine.id = 'cart-discount-line';
-        discountLine.style.cssText =
-            'color:#63e6be; margin-top:8px; font-weight:bold; text-align:center;';
+
+        discountLine.style.cssText = `
+            color: #63e6be;
+            margin-top: 8px;
+            font-weight: bold;
+            text-align: center;
+        `;
 
         cartTotal.parentElement.after(discountLine);
     }
@@ -324,47 +439,64 @@ function updateQtyDirect(id, newQty) {
         return;
     }
 
-    const item = cart.find(cartItem => String(cartItem.id) === String(id));
+    const item = cart.find(cartItem => {
+        return String(cartItem.id) === String(id);
+    });
 
     if (!item) return;
 
     item.quantity = quantity;
+
     updateCart();
     renderCartWithEdit();
 }
 
 function increaseQtyFromId(id) {
-    const item = cart.find(cartItem => String(cartItem.id) === String(id));
+    const item = cart.find(cartItem => {
+        return String(cartItem.id) === String(id);
+    });
 
     if (!item) return;
 
     item.quantity++;
+
     updateCart();
     renderCartWithEdit();
 }
 
 function decreaseQtyFromId(id) {
-    const item = cart.find(cartItem => String(cartItem.id) === String(id));
+    const item = cart.find(cartItem => {
+        return String(cartItem.id) === String(id);
+    });
 
     if (!item) return;
 
     if (item.quantity > 1) {
         item.quantity--;
     } else {
-        cart = cart.filter(cartItem => String(cartItem.id) !== String(id));
+        cart = cart.filter(cartItem => {
+            return String(cartItem.id) !== String(id);
+        });
     }
 
     updateCart();
     renderCartWithEdit();
 }
 
+// ========== ОПЛАТА ==========
+
 function handlePaymentChange() {
     const method = document.querySelector(
         'input[name="payment-method"]:checked'
     )?.value;
 
-    const cashBlock = document.getElementById('cash-amount-block');
-    const cashInput = document.getElementById('cash-amount');
+    const cashBlock = document.getElementById(
+        'cash-amount-block'
+    );
+
+    const cashInput = document.getElementById(
+        'cash-amount'
+    );
 
     if (!cashBlock || !cashInput) return;
 
@@ -384,7 +516,9 @@ function checkoutToTelegram() {
         return;
     }
 
-    const username = document.getElementById('customer-username')?.value.trim();
+    const username = document.getElementById(
+        'customer-username'
+    )?.value.trim();
 
     if (!username) {
         alert('⛔ Введи свой юзернейм Telegram!');
@@ -411,7 +545,9 @@ function checkoutToTelegram() {
         }
 
         if (cashAmount < total) {
-            alert(`⛔ Не хватает ${(total - cashAmount).toFixed(2)} BYN.`);
+            alert(
+                `⛔ Не хватает ${(total - cashAmount).toFixed(2)} BYN.`
+            );
             return;
         }
     }
@@ -419,20 +555,26 @@ function checkoutToTelegram() {
     const now = new Date();
 
     const dateString = now.toLocaleDateString('ru-RU');
+
     const timeString = now.toLocaleTimeString('ru-RU', {
         hour: '2-digit',
         minute: '2-digit'
     });
 
     let message = '🛒 ЗАКАЗ TRAHAN ZIZHKA\n\n';
+
     message += `📅 Дата: ${dateString}\n`;
     message += `⏰ Время: ${timeString}\n`;
     message += `👤 Юзернейм: ${username}\n\n`;
     message += '📋 Товары:\n';
 
     cart.forEach(item => {
-        const itemTotal = Number(item.price) * Number(item.quantity);
-        message += `▪️ ${item.name} × ${item.quantity} = ${itemTotal} BYN\n`;
+        const itemTotal =
+            Number(item.price) * Number(item.quantity);
+
+        message += `
+▪️ ${item.name} × ${item.quantity} = ${itemTotal} BYN
+`;
     });
 
     message += `\n💰 Сумма без скидки: ${totals.subtotal.toFixed(2)} BYN\n`;
@@ -465,6 +607,8 @@ function checkoutToTelegram() {
     }
 }
 
+// ========== 18+ ==========
+
 function checkAge() {
     const modal = document.getElementById('age-modal');
 
@@ -476,13 +620,18 @@ function checkAge() {
 
 function confirmAge(isAdult) {
     if (isAdult) {
-        document.getElementById('age-modal')?.classList.add('hidden');
+        document.getElementById('age-modal')?.classList.add(
+            'hidden'
+        );
+
         document.body.classList.remove('age-locked');
     } else {
         window.location.href =
             'https://www.youtube.com/results?search_query=мультфильмы';
     }
 }
+
+// ========== ПРОФИЛЬ TELEGRAM ==========
 
 function getTelegramUser() {
     const tg = window.Telegram?.WebApp;
@@ -495,11 +644,14 @@ function getTelegramUser() {
 }
 
 function openProfileTab() {
+    setActiveTab('profile-tab');
+
     const modal = document.getElementById('profile-modal');
 
     if (!modal) return;
 
     modal.style.display = 'flex';
+
     renderProfile();
 }
 
@@ -514,7 +666,9 @@ function closeProfileTab() {
 function getOrderStats(userId) {
     try {
         const stats = JSON.parse(
-            localStorage.getItem(`order_stats_${userId}`) || '{}'
+            localStorage.getItem(
+                `order_stats_${userId}`
+            ) || '{}'
         );
 
         return {
@@ -532,30 +686,51 @@ function getOrderStats(userId) {
 function renderProfile() {
     const user = getTelegramUser();
 
-    const loginBlock = document.getElementById('profile-login');
-    const userBlock = document.getElementById('profile-user');
+    const loginBlock = document.getElementById(
+        'profile-login'
+    );
+
+    const userBlock = document.getElementById(
+        'profile-user'
+    );
 
     if (!loginBlock || !userBlock) return;
 
     if (!user) {
         loginBlock.style.display = 'block';
         userBlock.style.display = 'none';
+
         activePromo = null;
         updatePromoInterface();
+
         return;
     }
 
     loginBlock.style.display = 'none';
     userBlock.style.display = 'block';
 
-    const name = [user.first_name, user.last_name]
+    const name = [
+        user.first_name,
+        user.last_name
+    ]
         .filter(Boolean)
         .join(' ');
 
-    const profileName = document.getElementById('profile-name');
-    const profileUsername = document.getElementById('profile-username');
-    const profileId = document.getElementById('profile-id');
-    const avatar = document.getElementById('profile-avatar');
+    const profileName = document.getElementById(
+        'profile-name'
+    );
+
+    const profileUsername = document.getElementById(
+        'profile-username'
+    );
+
+    const profileId = document.getElementById(
+        'profile-id'
+    );
+
+    const avatar = document.getElementById(
+        'profile-avatar'
+    );
 
     if (profileName) {
         profileName.textContent = name || 'Пользователь';
@@ -572,16 +747,27 @@ function renderProfile() {
     }
 
     if (avatar) {
-        avatar.src = user.photo_url || 'images/default-avatar.png';
+        avatar.src =
+            user.photo_url || 'images/default-avatar.png';
     }
 
     const stats = getOrderStats(user.id);
 
-    const orders = document.getElementById('profile-orders');
-    const spent = document.getElementById('profile-spent');
+    const orders = document.getElementById(
+        'profile-orders'
+    );
 
-    if (orders) orders.textContent = stats.orders;
-    if (spent) spent.textContent = stats.spent;
+    const spent = document.getElementById(
+        'profile-spent'
+    );
+
+    if (orders) {
+        orders.textContent = stats.orders;
+    }
+
+    if (spent) {
+        spent.textContent = stats.spent;
+    }
 
     loadActivePromo();
 }
@@ -591,14 +777,22 @@ function refreshProfile() {
 }
 
 function copyTelegramId() {
-    const id = document.getElementById('profile-id')?.textContent;
+    const id = document.getElementById(
+        'profile-id'
+    )?.textContent;
 
     if (!id || id === 'Неизвестно') return;
 
     navigator.clipboard.writeText(id)
-        .then(() => alert('✅ Telegram ID скопирован'))
-        .catch(() => alert('⛔ Не удалось скопировать Telegram ID'));
+        .then(() => {
+            alert('✅ Telegram ID скопирован');
+        })
+        .catch(() => {
+            alert('⛔ Не удалось скопировать Telegram ID');
+        });
 }
+
+// ========== ПРОМОКОДЫ ==========
 
 function getCurrentTelegramUser() {
     return getTelegramUser();
@@ -607,7 +801,9 @@ function getCurrentTelegramUser() {
 function updatePromoInterface() {
     const status = document.getElementById('promo-status');
     const input = document.getElementById('promo-input');
-    const button = document.querySelector('.promo-form button');
+    const button = document.querySelector(
+        '.promo-form button'
+    );
 
     if (!status || !input) return;
 
@@ -616,6 +812,7 @@ function updatePromoInterface() {
             `✅ ${activePromo.code}: скидка ${activePromo.discountPercent}% активна`;
 
         status.style.color = '#63e6be';
+
         input.value = activePromo.code;
         input.disabled = true;
 
@@ -624,8 +821,11 @@ function updatePromoInterface() {
             button.textContent = 'Активирован';
         }
     } else {
-        status.textContent = 'Введи код, чтобы получить скидку.';
+        status.textContent =
+            'Введи код, чтобы получить скидку.';
+
         status.style.color = '';
+
         input.value = '';
         input.disabled = false;
 
@@ -640,24 +840,35 @@ async function activatePromoCode() {
     const user = getCurrentTelegramUser();
 
     if (!user?.id) {
-        alert('⛔ Открой магазин через кнопку Mini App в Telegram-боте.');
+        alert(
+            '⛔ Открой магазин через кнопку Mini App в Telegram-боте.'
+        );
+
         return;
     }
 
     if (!supabaseClient) {
-        alert('⛔ Supabase не подключён. Проверь подключение библиотеки в index.html.');
+        alert(
+            '⛔ Supabase не подключён. Проверь index.html.'
+        );
+
         return;
     }
 
     const input = document.getElementById('promo-input');
-    const code = input?.value.trim().toUpperCase();
+
+    const code = input?.value
+        .trim()
+        .toUpperCase();
 
     if (!code) {
         alert('⛔ Введи промокод.');
         return;
     }
 
-    const button = document.querySelector('.promo-form button');
+    const button = document.querySelector(
+        '.promo-form button'
+    );
 
     if (button) {
         button.disabled = true;
@@ -675,12 +886,19 @@ async function activatePromoCode() {
 
         if (error) {
             console.error(error);
-            alert('⛔ Ошибка при проверке промокода.');
+
+            alert(
+                '⛔ Ошибка подключения при проверке промокода.'
+            );
+
             return;
         }
 
         if (!data?.ok) {
-            alert(`⛔ ${data?.message || 'Промокод не активирован'}`);
+            alert(
+                `⛔ ${data?.message || 'Промокод не активирован'}`
+            );
+
             return;
         }
 
@@ -700,11 +918,15 @@ async function activatePromoCode() {
             `✅ Промокод активирован: скидка ${activePromo.discountPercent}%`
         );
 
-        if (document.getElementById('cart-modal')?.style.display === 'flex') {
+        if (
+            document.getElementById('cart-modal')?.style.display ===
+            'flex'
+        ) {
             renderCartWithEdit();
         }
     } catch (error) {
         console.error(error);
+
         alert('⛔ Не удалось активировать промокод.');
     } finally {
         if (button && !activePromo) {
@@ -720,12 +942,15 @@ function loadActivePromo() {
     if (!user?.id) {
         activePromo = null;
         updatePromoInterface();
+
         return;
     }
 
     try {
         activePromo = JSON.parse(
-            localStorage.getItem(`active_promo_${user.id}`) || 'null'
+            localStorage.getItem(
+                `active_promo_${user.id}`
+            ) || 'null'
         );
     } catch {
         activePromo = null;
@@ -734,22 +959,32 @@ function loadActivePromo() {
     updatePromoInterface();
 }
 
-document.getElementById('cart-modal')?.addEventListener('click', function(event) {
-    if (event.target === this) {
-        toggleCart();
-    }
-});
+// ========== ЗАКРЫТИЕ ОКОН ==========
 
-document.getElementById('profile-modal')?.addEventListener('click', function(event) {
-    if (event.target === this) {
-        closeProfileTab();
+document.getElementById('cart-modal')?.addEventListener(
+    'click',
+    function(event) {
+        if (event.target === this) {
+            toggleCart();
+        }
     }
-});
+);
+
+document.getElementById('profile-modal')?.addEventListener(
+    'click',
+    function(event) {
+        if (event.target === this) {
+            closeProfileTab();
+        }
+    }
+);
 
 document.addEventListener('keydown', function(event) {
     if (event.key !== 'Escape') return;
 
-    const cartModal = document.getElementById('cart-modal');
+    const cartModal = document.getElementById(
+        'cart-modal'
+    );
 
     if (cartModal?.style.display === 'flex') {
         toggleCart();
@@ -757,10 +992,15 @@ document.addEventListener('keydown', function(event) {
 
     closeProfileTab();
 
-    if (document.getElementById('sidebar')?.classList.contains('active')) {
+    if (
+        document.getElementById('sidebar')
+            ?.classList.contains('active')
+    ) {
         toggleMenu();
     }
 });
+
+// ========== ЗАГРУЗКА ==========
 
 document.addEventListener('DOMContentLoaded', function() {
     window.Telegram?.WebApp?.ready();
@@ -769,4 +1009,6 @@ document.addEventListener('DOMContentLoaded', function() {
     renderCatalog();
     updateCart();
     renderProfile();
+
+    setActiveTab('catalog-tab');
 });
