@@ -685,28 +685,28 @@ async function checkoutToTelegram() {
 // ==================== 18+ ====================
 
 function checkAge() {
-    const modal =
-        document.getElementById('age-modal');
+    const modal = document.getElementById('age-modal');
 
     if (!modal) return;
 
-    modal.classList.remove('hidden');
+    modal.style.display = 'flex';
     document.body.classList.add('age-locked');
 }
 
 function confirmAge(isAdult) {
-    if (isAdult) {
-        document.getElementById('age-modal')
-            ?.classList.add('hidden');
+    const modal = document.getElementById('age-modal');
 
-        document.body.classList.remove(
-            'age-locked'
-        );
+    if (!modal) return;
+
+    if (isAdult === true) {
+        modal.style.display = 'none';
+        document.body.classList.remove('age-locked');
     } else {
         window.location.href =
             'https://www.youtube.com/results?search_query=мультики';
     }
 }
+
 
 // ==================== ПРОФИЛЬ ====================
 
