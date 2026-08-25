@@ -469,7 +469,7 @@ const products = [
     flavors: [],
     description: "Для миксования"
   },
-  {
+  /*{
     id: 52,
     name: "Marlboro Red (KING SIZE)",
     price: 10,
@@ -477,7 +477,7 @@ const products = [
     brand: "marlboro",
     flavors: [],
     description: "Полная пачка"
-  },
+  },*/
   {
     id: 87,
     name: "LOST MARY 5к тяг",
