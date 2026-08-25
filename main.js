@@ -11,8 +11,6 @@ let currentCategory = 'all';
 let currentBrand = 'all';
 let openCardId = null;
 
-// ========== НАВИГАЦИЯ ==========
-
 function setActiveTab(tabId) {
     document.querySelectorAll('.nav-tab').forEach(tab => {
         tab.classList.remove('active');
@@ -21,12 +19,11 @@ function setActiveTab(tabId) {
     document.getElementById(tabId)?.classList.add('active');
 }
 
-// ========== КАТАЛОГ И ФИЛЬТРЫ ==========
-
 function getFilteredProducts() {
-    const effectiveCategory = currentCategory === 'pod'
-        ? 'disposable'
-        : currentCategory;
+    const effectiveCategory =
+        currentCategory === 'pod'
+            ? 'disposable'
+            : currentCategory;
 
     return products.filter(product => {
         const categoryMatch =
@@ -51,11 +48,8 @@ function renderCatalog() {
     const filtered = getFilteredProducts();
 
     if (filtered.length === 0) {
-        catalog.innerHTML = `
-            <div class="no-products">
-                😕 Нет товаров по выбранным фильтрам
-            </div>
-        `;
+        catalog.innerHTML =
+            '<div class="no-products">😕 Нет товаров по выбранным фильтрам</div>';
         return;
     }
 
@@ -69,11 +63,9 @@ function renderCatalog() {
 
     catalog.innerHTML = filtered.map(product => {
         const imagePath = `images/product${product.id}.jpg`;
-
         const hasFlavors =
             Array.isArray(product.flavors) &&
             product.flavors.length > 0;
-
         const isOpen = openCardId === product.id;
 
         const flavorsHtml = hasFlavors && isOpen
@@ -109,7 +101,10 @@ function renderCatalog() {
                     class="product-header"
                     onclick="${hasFlavors ? `toggleCard(${product.id})` : ''}"
                 >
-                    <div class="product-image" data-product-name="${product.name}">
+                    <div
+                        class="product-image"
+                        data-product-name="${product.name}"
+                    >
                         <img
                             src="${imagePath}"
                             alt="${product.name}"
@@ -122,14 +117,15 @@ function renderCatalog() {
                             ${categoryNames[product.category] || 'Товар'}
                         </span>
 
-                        ${hasFlavors
-                            ? `
-                                <span class="flavors-count">
-                                    🍬 ${product.flavors.length} вкусов
-                                    ${isOpen ? '▲' : '▼'}
-                                </span>
-                            `
-                            : ''
+                        ${
+                            hasFlavors
+                                ? `
+                                    <span class="flavors-count">
+                                        🍬 ${product.flavors.length} вкусов
+                                        ${isOpen ? '▲' : '▼'}
+                                    </span>
+                                `
+                                : ''
                         }
 
                         <h3>${product.name}</h3>
@@ -144,9 +140,12 @@ function renderCatalog() {
                     class="add-btn"
                     onclick="addToCartWithFlavor(${product.id})"
                 >
-                    💜 ${hasFlavors
-                        ? (isOpen ? 'Добавить' : 'Выбрать вкус')
-                        : 'Добавить в корзину'
+                    💜 ${
+                        hasFlavors
+                            ? isOpen
+                                ? 'Добавить'
+                                : 'Выбрать вкус'
+                            : 'Добавить в корзину'
                     }
                 </button>
             </div>
@@ -159,9 +158,10 @@ function toggleCard(productId) {
 
     if (!product || !product.flavors?.length) return;
 
-    openCardId = openCardId === productId
-        ? null
-        : productId;
+    openCardId =
+        openCardId === productId
+            ? null
+            : productId;
 
     renderCatalog();
 }
@@ -189,7 +189,7 @@ function toggleMenu() {
     document.getElementById('overlay')?.classList.toggle('active');
 }
 
-// ========== КОРЗИНА ==========
+// ==================== КОРЗИНА ====================
 
 function addToCartWithFlavor(productId) {
     const product = products.find(item => item.id === productId);
@@ -237,7 +237,7 @@ function addToCart(productId) {
 
     if (!product) return;
 
-    const existing = cart.find(item => item.id === product.id);
+    const existing = cart.find(item => item.id === productId);
 
     if (existing) {
         existing.quantity++;
@@ -260,9 +260,7 @@ function toggleCart() {
 
     const isOpen = modal.style.display === 'flex';
 
-    modal.style.display = isOpen
-        ? 'none'
-        : 'flex';
+    modal.style.display = isOpen ? 'none' : 'flex';
 
     if (!isOpen) {
         renderCartWithEdit();
@@ -271,19 +269,16 @@ function toggleCart() {
 
 function getCartTotals() {
     const subtotal = cart.reduce(
-        (sum, item) => {
-            return sum + Number(item.price) * Number(item.quantity);
-        },
+        (sum, item) =>
+            sum + Number(item.price) * Number(item.quantity),
         0
     );
 
-    const discountPercent = Number(
-        activePromo?.discountPercent || 0
-    );
+    const discountPercent =
+        Number(activePromo?.discountPercent || 0);
 
-    const discountAmount = Math.round(
-        subtotal * discountPercent
-    ) / 100;
+    const discountAmount =
+        Math.round(subtotal * discountPercent) / 100;
 
     const total = Math.max(
         0,
@@ -305,19 +300,12 @@ function renderCartWithEdit() {
     if (!cartItems || !cartTotal) return;
 
     if (cart.length === 0) {
-        cartItems.innerHTML = `
-            <p class="empty-cart">😔 Корзина пуста</p>
-        `;
+        cartItems.innerHTML =
+            '<p class="empty-cart">😔 Корзина пуста</p>';
 
         cartTotal.textContent = '0';
 
-        const oldDiscountLine = document.getElementById(
-            'cart-discount-line'
-        );
-
-        if (oldDiscountLine) {
-            oldDiscountLine.remove();
-        }
+        document.getElementById('cart-discount-line')?.remove();
 
         return;
     }
@@ -392,11 +380,11 @@ function renderCartWithEdit() {
 
     const totals = getCartTotals();
 
-    cartTotal.textContent = totals.total.toFixed(2);
+    cartTotal.textContent =
+        totals.total.toFixed(2);
 
-    let discountLine = document.getElementById(
-        'cart-discount-line'
-    );
+    let discountLine =
+        document.getElementById('cart-discount-line');
 
     if (!discountLine) {
         discountLine = document.createElement('div');
@@ -412,18 +400,21 @@ function renderCartWithEdit() {
         cartTotal.parentElement.after(discountLine);
     }
 
-    discountLine.textContent = totals.discountPercent > 0
-        ? `🎟 ${activePromo.code}: −${totals.discountAmount.toFixed(2)} BYN (${totals.discountPercent}%)`
-        : '';
+    discountLine.textContent =
+        totals.discountPercent > 0
+            ? `🎟 ${activePromo.code}: −${totals.discountAmount.toFixed(2)} BYN (${totals.discountPercent}%)`
+            : '';
 }
 
 function updateCart() {
     const count = cart.reduce(
-        (sum, item) => sum + Number(item.quantity),
+        (sum, item) =>
+            sum + Number(item.quantity),
         0
     );
 
-    const cartCount = document.getElementById('cart-count');
+    const cartCount =
+        document.getElementById('cart-count');
 
     if (cartCount) {
         cartCount.textContent = count;
@@ -431,7 +422,8 @@ function updateCart() {
 }
 
 function updateQtyDirect(id, newQty) {
-    const quantity = Number.parseInt(newQty, 10);
+    const quantity =
+        Number.parseInt(newQty, 10);
 
     if (!Number.isInteger(quantity) || quantity < 1) {
         alert('⛔ Количество должно быть больше 0');
@@ -439,9 +431,9 @@ function updateQtyDirect(id, newQty) {
         return;
     }
 
-    const item = cart.find(cartItem => {
-        return String(cartItem.id) === String(id);
-    });
+    const item = cart.find(cartItem =>
+        String(cartItem.id) === String(id)
+    );
 
     if (!item) return;
 
@@ -452,9 +444,9 @@ function updateQtyDirect(id, newQty) {
 }
 
 function increaseQtyFromId(id) {
-    const item = cart.find(cartItem => {
-        return String(cartItem.id) === String(id);
-    });
+    const item = cart.find(cartItem =>
+        String(cartItem.id) === String(id)
+    );
 
     if (!item) return;
 
@@ -465,38 +457,36 @@ function increaseQtyFromId(id) {
 }
 
 function decreaseQtyFromId(id) {
-    const item = cart.find(cartItem => {
-        return String(cartItem.id) === String(id);
-    });
+    const item = cart.find(cartItem =>
+        String(cartItem.id) === String(id)
+    );
 
     if (!item) return;
 
     if (item.quantity > 1) {
         item.quantity--;
     } else {
-        cart = cart.filter(cartItem => {
-            return String(cartItem.id) !== String(id);
-        });
+        cart = cart.filter(cartItem =>
+            String(cartItem.id) !== String(id)
+        );
     }
 
     updateCart();
     renderCartWithEdit();
 }
 
-// ========== ОПЛАТА ==========
+// ==================== ОПЛАТА ====================
 
 function handlePaymentChange() {
     const method = document.querySelector(
         'input[name="payment-method"]:checked'
     )?.value;
 
-    const cashBlock = document.getElementById(
-        'cash-amount-block'
-    );
+    const cashBlock =
+        document.getElementById('cash-amount-block');
 
-    const cashInput = document.getElementById(
-        'cash-amount'
-    );
+    const cashInput =
+        document.getElementById('cash-amount');
 
     if (!cashBlock || !cashInput) return;
 
@@ -510,24 +500,25 @@ function handlePaymentChange() {
     }
 }
 
-function checkoutToTelegram() {
+async function checkoutToTelegram() {
     if (cart.length === 0) {
         alert('📦 Корзина пуста!');
         return;
     }
 
-    const username = document.getElementById(
-        'customer-username'
-    )?.value.trim();
+    const username =
+        document.getElementById('customer-username')
+            ?.value.trim();
 
     if (!username) {
         alert('⛔ Введи свой юзернейм Telegram!');
         return;
     }
 
-    const paymentMethod = document.querySelector(
-        'input[name="payment-method"]:checked'
-    )?.value || 'card';
+    const paymentMethod =
+        document.querySelector(
+            'input[name="payment-method"]:checked'
+        )?.value || 'card';
 
     const totals = getCartTotals();
     const total = totals.total;
@@ -536,7 +527,8 @@ function checkoutToTelegram() {
 
     if (paymentMethod === 'cash') {
         cashAmount = Number(
-            document.getElementById('cash-amount')?.value || 0
+            document.getElementById('cash-amount')
+                ?.value || 0
         );
 
         if (!cashAmount || cashAmount <= 0) {
@@ -552,16 +544,81 @@ function checkoutToTelegram() {
         }
     }
 
+    const promoForOrder = activePromo
+        ? {
+            code: activePromo.code,
+            discountPercent: activePromo.discountPercent
+        }
+        : null;
+
+    if (promoForOrder) {
+        const user = getCurrentTelegramUser();
+
+        if (!user?.id) {
+            alert(
+                '⛔ Для промокода открой сайт через Telegram Mini App.'
+            );
+            return;
+        }
+
+        if (!supabaseClient) {
+            alert(
+                '⛔ Supabase не подключён.'
+            );
+            return;
+        }
+
+        const { data, error } =
+            await supabaseClient.rpc(
+                'use_promo_code',
+                {
+                    p_code: promoForOrder.code,
+                    p_telegram_id: user.id
+                }
+            );
+
+        if (error) {
+            console.error(error);
+            alert(
+                '⛔ Не удалось списать промокод.'
+            );
+            return;
+        }
+
+        if (!data?.ok) {
+            alert(
+                data?.message ||
+                'Промокод уже использован или недействителен.'
+            );
+
+            activePromo = null;
+            await loadActivePromo();
+
+            return;
+        }
+
+        activePromo = null;
+
+        localStorage.removeItem(
+            `active_promo_${user.id}`
+        );
+
+        updatePromoInterface();
+    }
+
     const now = new Date();
 
-    const dateString = now.toLocaleDateString('ru-RU');
+    const dateString =
+        now.toLocaleDateString('ru-RU');
 
-    const timeString = now.toLocaleTimeString('ru-RU', {
-        hour: '2-digit',
-        minute: '2-digit'
-    });
+    const timeString =
+        now.toLocaleTimeString('ru-RU', {
+            hour: '2-digit',
+            minute: '2-digit'
+        });
 
-    let message = '🛒 ЗАКАЗ TRAHAN ZIZHKA\n\n';
+    let message =
+        '🛒 ЗАКАЗ TRAHAN ZIZHKA\n\n';
 
     message += `📅 Дата: ${dateString}\n`;
     message += `⏰ Время: ${timeString}\n`;
@@ -570,47 +627,66 @@ function checkoutToTelegram() {
 
     cart.forEach(item => {
         const itemTotal =
-            Number(item.price) * Number(item.quantity);
+            Number(item.price) *
+            Number(item.quantity);
 
-        message += `
-▪️ ${item.name} × ${item.quantity} = ${itemTotal} BYN
-`;
+        message +=
+            `▪️ ${item.name} × ${item.quantity} = ${itemTotal} BYN\n`;
     });
 
-    message += `\n💰 Сумма без скидки: ${totals.subtotal.toFixed(2)} BYN\n`;
+    message +=
+        `\n💰 Сумма без скидки: ${totals.subtotal.toFixed(2)} BYN\n`;
 
-    if (totals.discountPercent > 0) {
-        message += `🎟 Промокод: ${activePromo.code}\n`;
-        message += `📉 Скидка: −${totals.discountAmount.toFixed(2)} BYN (${totals.discountPercent}%)\n`;
+    if (promoForOrder) {
+        message +=
+            `🎟 Промокод: ${promoForOrder.code}\n`;
+
+        message +=
+            `📉 Скидка: −${totals.discountAmount.toFixed(2)} BYN (${promoForOrder.discountPercent}%)\n`;
     }
 
-    message += `💜 К оплате: ${total.toFixed(2)} BYN\n`;
+    message +=
+        `💜 К оплате: ${total.toFixed(2)} BYN\n`;
 
     if (paymentMethod === 'card') {
         message += '\n💳 Оплата: Картой\n';
     } else {
-        const change = cashAmount - total;
+        const change =
+            cashAmount - total;
 
         message += '\n💵 Оплата: Наличными\n';
-        message += `🤲 Клиент даёт: ${cashAmount.toFixed(2)} BYN\n`;
-        message += `🔁 Сдача: ${change.toFixed(2)} BYN\n`;
+        message +=
+            `🤲 Клиент даёт: ${cashAmount.toFixed(2)} BYN\n`;
+
+        message +=
+            `🔁 Сдача: ${change.toFixed(2)} BYN\n`;
     }
 
     message += '\n✅ Подтверждаю!';
 
-    const url = `https://t.me/TrahanZizhka?text=${encodeURIComponent(message)}`;
+    const url =
+        `https://t.me/TrahanZizhka?text=${encodeURIComponent(message)}`;
 
     if (window.Telegram?.WebApp?.openTelegramLink) {
         window.Telegram.WebApp.openTelegramLink(url);
     } else {
         window.open(url, '_blank');
     }
+
+    cart = [];
+
+    updateCart();
+    renderCartWithEdit();
+
+    document.getElementById('cart-modal')
+        ?.style.setProperty('display', 'none');
 }
 
-// ========== 18+ ==========
+// ==================== 18+ ====================
 
 function checkAge() {
-    const modal = document.getElementById('age-modal');
+    const modal =
+        document.getElementById('age-modal');
 
     if (!modal) return;
 
@@ -620,18 +696,19 @@ function checkAge() {
 
 function confirmAge(isAdult) {
     if (isAdult) {
-        document.getElementById('age-modal')?.classList.add(
-            'hidden'
-        );
+        document.getElementById('age-modal')
+            ?.classList.add('hidden');
 
-        document.body.classList.remove('age-locked');
+        document.body.classList.remove(
+            'age-locked'
+        );
     } else {
         window.location.href =
-            'https://www.youtube.com/results?search_query=мультфильмы';
+            'https://www.youtube.com/results?search_query=мультики';
     }
 }
 
-// ========== ПРОФИЛЬ TELEGRAM ==========
+// ==================== ПРОФИЛЬ ====================
 
 function getTelegramUser() {
     const tg = window.Telegram?.WebApp;
@@ -643,10 +720,15 @@ function getTelegramUser() {
     return tg.initDataUnsafe?.user || null;
 }
 
+function getCurrentTelegramUser() {
+    return getTelegramUser();
+}
+
 function openProfileTab() {
     setActiveTab('profile-tab');
 
-    const modal = document.getElementById('profile-modal');
+    const modal =
+        document.getElementById('profile-modal');
 
     if (!modal) return;
 
@@ -656,7 +738,8 @@ function openProfileTab() {
 }
 
 function closeProfileTab() {
-    const modal = document.getElementById('profile-modal');
+    const modal =
+        document.getElementById('profile-modal');
 
     if (modal) {
         modal.style.display = 'none';
@@ -686,13 +769,11 @@ function getOrderStats(userId) {
 function renderProfile() {
     const user = getTelegramUser();
 
-    const loginBlock = document.getElementById(
-        'profile-login'
-    );
+    const loginBlock =
+        document.getElementById('profile-login');
 
-    const userBlock = document.getElementById(
-        'profile-user'
-    );
+    const userBlock =
+        document.getElementById('profile-user');
 
     if (!loginBlock || !userBlock) return;
 
@@ -716,58 +797,34 @@ function renderProfile() {
         .filter(Boolean)
         .join(' ');
 
-    const profileName = document.getElementById(
-        'profile-name'
-    );
+    document.getElementById('profile-name')
+        ?.textContent = name || 'Пользователь';
 
-    const profileUsername = document.getElementById(
-        'profile-username'
-    );
-
-    const profileId = document.getElementById(
-        'profile-id'
-    );
-
-    const avatar = document.getElementById(
-        'profile-avatar'
-    );
-
-    if (profileName) {
-        profileName.textContent = name || 'Пользователь';
-    }
-
-    if (profileUsername) {
-        profileUsername.textContent = user.username
+    document.getElementById('profile-username')
+        ?.textContent = user.username
             ? `@${user.username}`
             : 'Username не указан';
-    }
 
-    if (profileId) {
-        profileId.textContent = user.id;
-    }
+    document.getElementById('profile-id')
+        ?.textContent = user.id;
+
+    const avatar =
+        document.getElementById('profile-avatar');
 
     if (avatar) {
         avatar.src =
-            user.photo_url || 'images/default-avatar.png';
+            user.photo_url ||
+            'images/default-avatar.png';
     }
 
-    const stats = getOrderStats(user.id);
+    const stats =
+        getOrderStats(user.id);
 
-    const orders = document.getElementById(
-        'profile-orders'
-    );
+    document.getElementById('profile-orders')
+        ?.textContent = stats.orders;
 
-    const spent = document.getElementById(
-        'profile-spent'
-    );
-
-    if (orders) {
-        orders.textContent = stats.orders;
-    }
-
-    if (spent) {
-        spent.textContent = stats.spent;
-    }
+    document.getElementById('profile-spent')
+        ?.textContent = stats.spent;
 
     loadActivePromo();
 }
@@ -777,9 +834,9 @@ function refreshProfile() {
 }
 
 function copyTelegramId() {
-    const id = document.getElementById(
-        'profile-id'
-    )?.textContent;
+    const id =
+        document.getElementById('profile-id')
+            ?.textContent;
 
     if (!id || id === 'Неизвестно') return;
 
@@ -792,18 +849,17 @@ function copyTelegramId() {
         });
 }
 
-// ========== ПРОМОКОДЫ ==========
-
-function getCurrentTelegramUser() {
-    return getTelegramUser();
-}
+// ==================== ПРОМОКОДЫ ====================
 
 function updatePromoInterface() {
-    const status = document.getElementById('promo-status');
-    const input = document.getElementById('promo-input');
-    const button = document.querySelector(
-        '.promo-form button'
-    );
+    const status =
+        document.getElementById('promo-status');
+
+    const input =
+        document.getElementById('promo-input');
+
+    const button =
+        document.querySelector('.promo-form button');
 
     if (!status || !input) return;
 
@@ -837,13 +893,13 @@ function updatePromoInterface() {
 }
 
 async function activatePromoCode() {
-    const user = getCurrentTelegramUser();
+    const user =
+        getCurrentTelegramUser();
 
     if (!user?.id) {
         alert(
-            '⛔ Открой магазин через кнопку Mini App в Telegram-боте.'
+            '⛔ Открой магазин через кнопку Mini App в Telegram.'
         );
-
         return;
     }
 
@@ -851,24 +907,22 @@ async function activatePromoCode() {
         alert(
             '⛔ Supabase не подключён. Проверь index.html.'
         );
-
         return;
     }
 
-    const input = document.getElementById('promo-input');
+    const input =
+        document.getElementById('promo-input');
 
-    const code = input?.value
-        .trim()
-        .toUpperCase();
+    const code =
+        input?.value.trim().toUpperCase();
 
     if (!code) {
         alert('⛔ Введи промокод.');
         return;
     }
 
-    const button = document.querySelector(
-        '.promo-form button'
-    );
+    const button =
+        document.querySelector('.promo-form button');
 
     if (button) {
         button.disabled = true;
@@ -876,13 +930,14 @@ async function activatePromoCode() {
     }
 
     try {
-        const { data, error } = await supabaseClient.rpc(
-            'activate_promo_code',
-            {
-                p_code: code,
-                p_telegram_id: user.id
-            }
-        );
+        const { data, error } =
+            await supabaseClient.rpc(
+                'activate_promo_code',
+                {
+                    p_code: code,
+                    p_telegram_id: user.id
+                }
+            );
 
         if (error) {
             console.error(error);
@@ -896,7 +951,8 @@ async function activatePromoCode() {
 
         if (!data?.ok) {
             alert(
-                `⛔ ${data?.message || 'Промокод не активирован'}`
+                data?.message ||
+                'Промокод не активирован.'
             );
 
             return;
@@ -904,30 +960,32 @@ async function activatePromoCode() {
 
         activePromo = {
             code: data.code,
-            discountPercent: Number(data.discount_percent)
+            discountPercent:
+                Number(data.discount_percent)
         };
 
-        localStorage.setItem(
-            `active_promo_${user.id}`,
-            JSON.stringify(activePromo)
+        localStorage.removeItem(
+            `active_promo_${user.id}`
         );
 
         updatePromoInterface();
 
         alert(
-            `✅ Промокод активирован: скидка ${activePromo.discountPercent}%`
+            `✅ Промокод активирован. Скидка ${activePromo.discountPercent}%`
         );
 
         if (
-            document.getElementById('cart-modal')?.style.display ===
-            'flex'
+            document.getElementById('cart-modal')
+                ?.style.display === 'flex'
         ) {
             renderCartWithEdit();
         }
     } catch (error) {
         console.error(error);
 
-        alert('⛔ Не удалось активировать промокод.');
+        alert(
+            '⛔ Не удалось активировать промокод.'
+        );
     } finally {
         if (button && !activePromo) {
             button.disabled = false;
@@ -936,55 +994,80 @@ async function activatePromoCode() {
     }
 }
 
-function loadActivePromo() {
-    const user = getCurrentTelegramUser();
+async function loadActivePromo() {
+    const user =
+        getCurrentTelegramUser();
 
-    if (!user?.id) {
+    if (!user?.id || !supabaseClient) {
         activePromo = null;
         updatePromoInterface();
-
         return;
     }
 
     try {
-        activePromo = JSON.parse(
-            localStorage.getItem(
-                `active_promo_${user.id}`
-            ) || 'null'
-        );
-    } catch {
-        activePromo = null;
-    }
+        const { data, error } =
+            await supabaseClient.rpc(
+                'get_active_promo',
+                {
+                    p_telegram_id: user.id
+                }
+            );
 
-    updatePromoInterface();
+        if (error) {
+            console.error(
+                'Ошибка загрузки промокода:',
+                error
+            );
+
+            activePromo = null;
+            updatePromoInterface();
+            return;
+        }
+
+        if (data?.ok) {
+            activePromo = {
+                code: data.code,
+                discountPercent:
+                    Number(data.discount_percent)
+            };
+        } else {
+            activePromo = null;
+        }
+
+        localStorage.removeItem(
+            `active_promo_${user.id}`
+        );
+
+        updatePromoInterface();
+    } catch (error) {
+        console.error(error);
+
+        activePromo = null;
+        updatePromoInterface();
+    }
 }
 
-// ========== ЗАКРЫТИЕ ОКОН ==========
+// ==================== ОБРАБОТЧИКИ ====================
 
-document.getElementById('cart-modal')?.addEventListener(
-    'click',
-    function(event) {
+document.getElementById('cart-modal')
+    ?.addEventListener('click', function(event) {
         if (event.target === this) {
             toggleCart();
         }
-    }
-);
+    });
 
-document.getElementById('profile-modal')?.addEventListener(
-    'click',
-    function(event) {
+document.getElementById('profile-modal')
+    ?.addEventListener('click', function(event) {
         if (event.target === this) {
             closeProfileTab();
         }
-    }
-);
+    });
 
 document.addEventListener('keydown', function(event) {
     if (event.key !== 'Escape') return;
 
-    const cartModal = document.getElementById(
-        'cart-modal'
-    );
+    const cartModal =
+        document.getElementById('cart-modal');
 
     if (cartModal?.style.display === 'flex') {
         toggleCart();
@@ -999,8 +1082,6 @@ document.addEventListener('keydown', function(event) {
         toggleMenu();
     }
 });
-
-// ========== ЗАГРУЗКА ==========
 
 document.addEventListener('DOMContentLoaded', function() {
     window.Telegram?.WebApp?.ready();
