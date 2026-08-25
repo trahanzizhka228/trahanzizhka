@@ -12,9 +12,24 @@
         <p>Жидкости, поды, испарители и не только</p>
     </header>
     
-<button class="menu-btn" onclick="toggleMenu()">☰ Каталог</button>
-<button class="profile-btn" onclick="openProfileTab()">👤 Профиль</button>
-<button class="cart-btn" onclick="toggleCart()">🛒 Корзина (<span id="cart-count">0</span>)</button>
+<nav class="top-navigation">
+    <button class="nav-tab active" id="catalog-tab" onclick="toggleMenu()">
+        <span class="nav-icon">☰</span>
+        <span>Каталог</span>
+    </button>
+
+    <button class="nav-tab" id="profile-tab" onclick="openProfileTab()">
+        <span class="nav-icon">👤</span>
+        <span>Профиль</span>
+    </button>
+
+    <button class="nav-tab" id="cart-tab" onclick="toggleCart()">
+        <span class="nav-icon">🛒</span>
+        <span>Корзина</span>
+        <span class="cart-badge" id="cart-count">0</span>
+    </button>
+</nav>
+
 
     
     <!-- Боковое меню -->
