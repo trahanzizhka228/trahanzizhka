@@ -1,1194 +1,464 @@
 const SUPABASE_URL = 'https://jqrjybptkhspfgbhvalo.supabase.co';
 const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_RDMAZ6lxzNWSShrdgDs0ug_d9nTPAcD';
 
-const supabaseClient = window.supabase?.createClient(
-    SUPABASE_URL,
-    SUPABASE_PUBLISHABLE_KEY
-);
+const supabaseClient = window.supabase
+    ? window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY)
+    : null;
 
+let products = [];
 let activePromo = null;
 let currentCategory = 'all';
 let currentBrand = 'all';
 let openCardId = null;
 let promoRequestInProgress = false;
+let isCatalogLoading = false;
+
+document.addEventListener('DOMContentLoaded', async () => {
+    initNavigation();
+    initFilters();
+    initCatalogClicks();
+    initPromo();
+
+    await loadProducts();
+});
+
+// ========== ЗАГРУЗКА ТОВАРОВ ==========
+
+async function loadProducts() {
+    const catalog = document.getElementById('catalog');
+
+    try {
+        isCatalogLoading = true;
+
+        if (catalog) {
+            catalog.innerHTML = `
+                <div class="catalog-message">
+                    Загружаем ассортимент...
+                </div>
+            `;
+        }
+
+        if (!supabaseClient) {
+            console.error('Supabase client не создан. Проверь подключение supabase-js в HTML.');
+            products = [];
+            renderCatalog();
+            return;
+        }
+
+        const { data, error } = await supabaseClient
+            .from('products')
+            .select('*')
+            .order('id', { ascending: true });
+
+        if (error) {
+            console.error('Ошибка загрузки товаров из Supabase:', error);
+            products = [];
+            renderCatalog('Не удалось загрузить ассортимент. Попробуйте обновить страницу.');
+            return;
+        }
+
+        products = Array.isArray(data) ? data : [];
+
+        renderCatalog();
+        renderBrandFilters();
+
+    } catch (error) {
+        console.error('Критическая ошибка при загрузке товаров:', error);
+        products = [];
+        renderCatalog('Произошла ошибка при загрузке ассортимента.');
+    } finally {
+        isCatalogLoading = false;
+    }
+}
 
 // ========== НАВИГАЦИЯ ==========
+
+function initNavigation() {
+    document.querySelectorAll('.nav-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            const tabId = tab.id || tab.dataset.tab;
+
+            if (tabId) {
+                setActiveTab(tabId);
+            }
+
+            const target = tab.dataset.target;
+
+            if (target) {
+                scrollToSection(target);
+            }
+        });
+    });
+}
 
 function setActiveTab(tabId) {
     document.querySelectorAll('.nav-tab').forEach(tab => {
         tab.classList.remove('active');
     });
 
-    document.getElementById(tabId)?.classList.add('active');
+    const activeTab = document.getElementById(tabId);
+
+    if (activeTab) {
+        activeTab.classList.add('active');
+    }
 }
 
-// ========== КАТАЛОГ И ФИЛЬТРЫ ==========
+function scrollToSection(sectionId) {
+    const section = document.getElementById(sectionId);
+
+    if (section) {
+        section.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+        });
+    }
+}
+
+// ========== ФИЛЬТРЫ ==========
+
+function initFilters() {
+    document.addEventListener('click', event => {
+        const categoryButton = event.target.closest('[data-category]');
+        const brandButton = event.target.closest('[data-brand]');
+
+        if (categoryButton) {
+            currentCategory = categoryButton.dataset.category || 'all';
+            setActiveFilter('[data-category]', categoryButton);
+            renderCatalog();
+        }
+
+        if (brandButton) {
+            currentBrand = brandButton.dataset.brand || 'all';
+            setActiveFilter('[data-brand]', brandButton);
+            renderCatalog();
+        }
+    });
+}
+
+function setActiveFilter(selector, activeButton) {
+    document.querySelectorAll(selector).forEach(button => {
+        button.classList.remove('active');
+    });
+
+    activeButton.classList.add('active');
+}
 
 function getFilteredProducts() {
+    const safeProducts = Array.isArray(products) ? products : [];
+
     const effectiveCategory = currentCategory === 'pod'
         ? 'disposable'
         : currentCategory;
 
-    return products.filter(product => {
+    return safeProducts.filter(product => {
+        if (!product) return false;
+
+        const productCategory = String(product.category || '').toLowerCase();
+        const productBrand = String(product.brand || '').toLowerCase();
+
         const categoryMatch =
             effectiveCategory === 'all' ||
-            product.category === effectiveCategory;
+            productCategory === String(effectiveCategory).toLowerCase();
 
         const brandMatch =
             currentBrand === 'all' ||
-            String(product.brand || '')
-                .toLowerCase()
-                .includes(currentBrand.toLowerCase());
+            productBrand.includes(String(currentBrand).toLowerCase());
 
         return categoryMatch && brandMatch;
     });
 }
 
-function renderCatalog() {
+function renderBrandFilters() {
+    const brandContainer = document.getElementById('brandFilters');
+
+    if (!brandContainer) return;
+
+    const brands = [...new Set(
+        products
+            .map(product => product.brand)
+            .filter(Boolean)
+    )];
+
+    brandContainer.innerHTML = `
+        <button class="filter-btn active" data-brand="all">
+            Все бренды
+        </button>
+        ${brands.map(brand => `
+            <button class="filter-btn" data-brand="${escapeHtml(brand)}">
+                ${escapeHtml(brand)}
+            </button>
+        `).join('')}
+    `;
+}
+
+// ========== КАТАЛОГ ==========
+
+function renderCatalog(customMessage = '') {
     const catalog = document.getElementById('catalog');
-    if (!catalog) return;
+
+    if (!catalog) {
+        console.warn('Контейнер #catalog не найден в HTML.');
+        return;
+    }
+
+    if (customMessage) {
+        catalog.innerHTML = `
+            <div class="catalog-message">
+                ${escapeHtml(customMessage)}
+            </div>
+        `;
+        return;
+    }
 
     const filtered = getFilteredProducts();
 
     if (filtered.length === 0) {
         catalog.innerHTML = `
-            <div class="no-products">
-                😕 Нет товаров по выбранным фильтрам
+            <div class="catalog-message">
+                Товары не найдены.
             </div>
         `;
         return;
     }
 
-    const categoryNames = {
-        liquid: 'Жидкость',
-        disposable: 'Одноразка',
-        consumables: 'Расходник',
-        cigarettes: 'Сигареты',
-        snus: 'Снюс'
-    };
+    catalog.innerHTML = filtered.map(product => createProductCard(product)).join('');
+}
 
-    catalog.innerHTML = filtered.map(product => {
-        const imagePath = `images/product${product.id}.jpg`;
-        const hasFlavors =
-            Array.isArray(product.flavors) &&
-            product.flavors.length > 0;
+function createProductCard(product) {
+    const id = product.id ?? '';
+    const title = product.name || product.title || 'Без названия';
+    const brand = product.brand || '';
+    const category = product.category || '';
+    const description = product.description || '';
+    const price = product.price ?? '';
+    const oldPrice = product.old_price ?? product.oldPrice ?? '';
+    const image = product.image_url || product.image || product.photo || '';
+    const inStock = product.in_stock !== false && product.stock !== 0;
+    const isOpen = String(openCardId) === String(id);
 
-        const isOpen = openCardId === product.id;
+    return `
+        <div class="product-card ${isOpen ? 'open' : ''}" data-product-id="${escapeHtml(id)}">
+            <div class="product-image-wrap">
+                ${image
+                    ? `<img class="product-image" src="${escapeAttribute(image)}" alt="${escapeAttribute(title)}" loading="lazy">`
+                    : `<div class="product-image product-image-placeholder">Нет фото</div>`
+                }
+            </div>
 
-        const flavorsHtml = hasFlavors && isOpen
-            ? `
-                <div class="flavors-dropdown">
-                    <label class="flavor-select">
-                        <input
-                            type="radio"
-                            name="flavor-${product.id}"
-                            value=""
-                            checked
-                        >
-                        <span>Выберите вкус...</span>
-                    </label>
+            <div class="product-info">
+                ${brand ? `<div class="product-brand">${escapeHtml(brand)}</div>` : ''}
 
-                    ${product.flavors.map((flavor, index) => `
-                        <label class="flavor-select">
-                            <input
-                                type="radio"
-                                name="flavor-${product.id}"
-                                value="${index}"
-                            >
-                            <span>${flavor}</span>
-                        </label>
-                    `).join('')}
-                </div>
-            `
-            : '';
+                <h3 class="product-title">
+                    ${escapeHtml(title)}
+                </h3>
 
-        return `
-            <div class="product-card ${hasFlavors ? 'has-flavors' : ''} ${isOpen ? 'open' : ''}">
-                <div
-                    class="product-header"
-                    onclick="${hasFlavors ? `toggleCard(${product.id})` : ''}"
-                >
-                    <div class="product-image" data-product-name="${product.name}">
-                        <img
-                            src="${imagePath}"
-                            alt="${product.name}"
-                            onerror="this.style.display='none'"
-                        >
+                ${category ? `
+                    <div class="product-category">
+                        ${escapeHtml(getCategoryTitle(category))}
                     </div>
+                ` : ''}
 
-                    <div class="product-info">
-                        <span class="category-badge">
-                            ${categoryNames[product.category] || 'Товар'}
+                ${description ? `
+                    <div class="product-description ${isOpen ? 'visible' : ''}">
+                        ${escapeHtml(description)}
+                    </div>
+                ` : ''}
+
+                <div class="product-bottom">
+                    <div class="product-price-wrap">
+                        ${oldPrice ? `
+                            <span class="product-old-price">
+                                ${formatPrice(oldPrice)}
+                            </span>
+                        ` : ''}
+
+                        <span class="product-price">
+                            ${formatPrice(price)}
                         </span>
+                    </div>
 
-                        ${hasFlavors
-                            ? `
-                                <span class="flavors-count">
-                                    🍬 ${product.flavors.length} вкусов
-                                    ${isOpen ? '▲' : '▼'}
-                                </span>
-                            `
-                            : ''
-                        }
+                    <div class="product-actions">
+                        ${description ? `
+                            <button class="details-btn" type="button" data-id="${escapeAttribute(id)}">
+                                ${isOpen ? 'Скрыть' : 'Подробнее'}
+                            </button>
+                        ` : ''}
 
-                        <h3>${product.name}</h3>
-                        <p class="description">${product.description || ''}</p>
-                        <p class="price">${product.price} BYN</p>
+                        <button 
+                            class="buy-btn" 
+                            type="button" 
+                            data-id="${escapeAttribute(id)}"
+                            ${inStock ? '' : 'disabled'}
+                        >
+                            ${inStock ? 'Купить' : 'Нет в наличии'}
+                        </button>
                     </div>
                 </div>
-
-                ${flavorsHtml}
-
-                <button
-                    class="add-btn"
-                    onclick="addToCartWithFlavor(${product.id})"
-                >
-                    💜 ${hasFlavors
-                        ? (isOpen ? 'Добавить' : 'Выбрать вкус')
-                        : 'Добавить в корзину'
-                    }
-                </button>
-            </div>
-        `;
-    }).join('');
-}
-
-function toggleCard(productId) {
-    const product = products.find(item => item.id === productId);
-
-    if (!product || !product.flavors?.length) return;
-
-    openCardId = openCardId === productId
-        ? null
-        : productId;
-
-    renderCatalog();
-}
-
-function filterProducts() {
-    const categoryRadio =
-        document.querySelector('input[name="category"]:checked');
-
-    const brandRadio =
-        document.querySelector('input[name="brand"]:checked');
-
-    currentCategory = categoryRadio?.value || 'all';
-    currentBrand = brandRadio?.value || 'all';
-
-    openCardId = null;
-    renderCatalog();
-}
-
-function toggleMenu() {
-    setActiveTab('catalog-tab');
-
-    document.getElementById('sidebar')?.classList.toggle('active');
-    document.getElementById('overlay')?.classList.toggle('active');
-}
-
-// ========== КОРЗИНА ==========
-
-function addToCartWithFlavor(productId) {
-    const product = products.find(item => item.id === productId);
-
-    if (!product) return;
-
-    if (!product.flavors?.length) {
-        addToCart(productId);
-        alert(`✅ Добавлено: ${product.name}`);
-        return;
-    }
-
-    if (openCardId !== productId) {
-        toggleCard(productId);
-        return;
-    }
-
-    const flavorSelect = document.querySelector(
-        `input[name="flavor-${productId}"]:checked`
-    );
-
-    if (!flavorSelect || flavorSelect.value === '') {
-        alert('⛔ Выбери вкус!');
-        return;
-    }
-
-    const flavorIndex = Number(flavorSelect.value);
-    const flavorName = product.flavors[flavorIndex];
-    const uniqueId = `${productId}_${flavorIndex}`;
-
-    const existing = cart.find(item => item.id === uniqueId);
-
-    if (existing) {
-        existing.quantity++;
-    } else {
-        cart.push({
-            id: uniqueId,
-            name: `${product.name} — ${flavorName}`,
-            price: product.price,
-            quantity: 1
-        });
-    }
-
-    updateCart();
-    alert(`✅ Добавлено: ${product.name} — ${flavorName}`);
-}
-
-function addToCart(productId) {
-    const product = products.find(item => item.id === productId);
-
-    if (!product) return;
-
-    const existing = cart.find(item => item.id === product.id);
-
-    if (existing) {
-        existing.quantity++;
-    } else {
-        cart.push({
-            ...product,
-            quantity: 1
-        });
-    }
-
-    updateCart();
-}
-
-function toggleCart() {
-    setActiveTab('cart-tab');
-
-    const modal = document.getElementById('cart-modal');
-    if (!modal) return;
-
-    const isOpen = modal.style.display === 'flex';
-
-    modal.style.display = isOpen
-        ? 'none'
-        : 'flex';
-
-    if (!isOpen) {
-        renderCartWithEdit();
-    }
-}
-
-function getCartTotals() {
-    const subtotal = cart.reduce(
-        (sum, item) => {
-            return sum + Number(item.price) * Number(item.quantity);
-        },
-        0
-    );
-
-    const discountPercent = Number(activePromo?.discountPercent || 0);
-
-    const discountAmount =
-        Math.round(subtotal * discountPercent) / 100;
-
-    const total = Math.max(0, subtotal - discountAmount);
-
-    return {
-        subtotal,
-        discountPercent,
-        discountAmount,
-        total
-    };
-}
-
-function renderCartWithEdit() {
-    const cartItems = document.getElementById('cart-items');
-    const cartTotal = document.getElementById('cart-total');
-
-    if (!cartItems || !cartTotal) return;
-
-    if (cart.length === 0) {
-        cartItems.innerHTML = `
-            <p class="empty-cart">
-                😔 Корзина пуста
-            </p>
-        `;
-
-        cartTotal.textContent = '0';
-        document.getElementById('cart-discount-line')?.remove();
-        return;
-    }
-
-    cartItems.innerHTML = cart.map(item => `
-        <div class="cart-item">
-            <div class="cart-item-info">
-                <div class="cart-item-title">
-                    ${item.name}
-                </div>
-
-                <div class="cart-item-price">
-                    ${item.price} BYN ×
-
-                    <input
-                        type="number"
-                        class="qty-input"
-                        value="${item.quantity}"
-                        min="1"
-                        max="99"
-                        onchange="updateQtyDirect('${item.id}', this.value)"
-                        style="
-                            width: 60px;
-                            padding: 5px;
-                            margin-left: 8px;
-                            color: #fff;
-                            font-weight: bold;
-                            text-align: center;
-                            background: #2d1b4e;
-                            border: 2px solid #ff6edb;
-                            border-radius: 8px;
-                        "
-                    >
-                </div>
-
-                <div style="color:#c48bff;font-size:0.9em;margin-top:5px;">
-                    Итого:
-                    ${(Number(item.price) * Number(item.quantity)).toFixed(2)}
-                    BYN
-                </div>
-            </div>
-
-            <div class="cart-item-quantity">
-                <button
-                    class="qty-btn"
-                    onclick="decreaseQtyFromId('${item.id}')"
-                >
-                    -
-                </button>
-
-                <span style="color:#fff;font-weight:bold;min-width:30px;text-align:center;">
-                    ${item.quantity}
-                </span>
-
-                <button
-                    class="qty-btn"
-                    onclick="increaseQtyFromId('${item.id}')"
-                >
-                    +
-                </button>
             </div>
         </div>
-    `).join('');
-
-    const totals = getCartTotals();
-
-    cartTotal.textContent = totals.total.toFixed(2);
-
-    let discountLine =
-        document.getElementById('cart-discount-line');
-
-    if (!discountLine) {
-        discountLine = document.createElement('div');
-        discountLine.id = 'cart-discount-line';
-        discountLine.style.cssText = `
-            color: #63e6be;
-            margin-top: 8px;
-            font-weight: bold;
-            text-align: center;
-        `;
-
-        cartTotal.parentElement.after(discountLine);
-    }
-
-    if (totals.discountPercent > 0 && activePromo) {
-        discountLine.textContent =
-            `🎟 ${activePromo.code}: −${totals.discountAmount.toFixed(2)} BYN (${totals.discountPercent}%)`;
-    } else {
-        discountLine.textContent = '';
-    }
+    `;
 }
 
-function updateCart() {
-    const count = cart.reduce(
-        (sum, item) => sum + Number(item.quantity),
-        0
-    );
+function initCatalogClicks() {
+    document.addEventListener('click', event => {
+        const detailsButton = event.target.closest('.details-btn');
+        const buyButton = event.target.closest('.buy-btn');
 
-    const cartCount = document.getElementById('cart-count');
+        if (detailsButton) {
+            const productId = detailsButton.dataset.id;
 
-    if (cartCount) {
-        cartCount.textContent = count;
-    }
-}
+            openCardId = String(openCardId) === String(productId)
+                ? null
+                : productId;
 
-function findCartItem(id) {
-    return cart.find(cartItem => {
-        return String(cartItem.id) === String(id);
-    });
-}
-
-function updateQtyDirect(id, newQty) {
-    const quantity = Number.parseInt(newQty, 10);
-
-    if (!Number.isInteger(quantity) || quantity < 1) {
-        alert('⛔ Количество должно быть больше 0');
-        renderCartWithEdit();
-        return;
-    }
-
-    const item = findCartItem(id);
-
-    if (!item) return;
-
-    item.quantity = quantity;
-
-    updateCart();
-    renderCartWithEdit();
-}
-
-function increaseQtyFromId(id) {
-    const item = findCartItem(id);
-
-    if (!item) return;
-
-    item.quantity++;
-
-    updateCart();
-    renderCartWithEdit();
-}
-
-function decreaseQtyFromId(id) {
-    const item = findCartItem(id);
-
-    if (!item) return;
-
-    if (item.quantity > 1) {
-        item.quantity--;
-    } else {
-        cart = cart.filter(cartItem => {
-            return String(cartItem.id) !== String(id);
-        });
-    }
-
-    updateCart();
-    renderCartWithEdit();
-}
-
-// ========== ОПЛАТА ==========
-
-function handlePaymentChange() {
-    const method =
-        document.querySelector('input[name="payment-method"]:checked')?.value;
-
-    const cashBlock = document.getElementById('cash-amount-block');
-    const cashInput = document.getElementById('cash-amount');
-
-    if (!cashBlock || !cashInput) return;
-
-    if (method === 'cash') {
-        cashBlock.style.display = 'block';
-        cashInput.required = true;
-    } else {
-        cashBlock.style.display = 'none';
-        cashInput.required = false;
-        cashInput.value = '';
-    }
-}
-
-async function finishPromoAfterCheckout() {
-    const user = getCurrentTelegramUser();
-
-    if (!activePromo) {
-        return {
-            ok: true,
-            message: 'Промокода нет'
-        };
-    }
-
-    if (!user?.id) {
-        return {
-            ok: false,
-            message: 'Не удалось определить Telegram ID пользователя'
-        };
-    }
-
-    if (!supabaseClient) {
-        return {
-            ok: false,
-            message: 'Supabase не подключён'
-        };
-    }
-
-    try {
-        const { data, error } = await supabaseClient.rpc(
-            'finish_promo_order',
-            {
-                p_code: activePromo.code,
-                p_telegram_id: user.id
-            }
-        );
-
-        if (error) {
-            console.error('Ошибка finish_promo_order:', error);
-
-            return {
-                ok: false,
-                message: 'Ошибка базы при списании промокода'
-            };
-        }
-
-        if (!data?.ok) {
-            return {
-                ok: false,
-                message: data?.message || 'Промокод уже недоступен'
-            };
-        }
-
-        activePromo = null;
-
-        localStorage.removeItem(`active_promo_${user.id}`);
-
-        updatePromoInterface();
-        renderCartWithEdit();
-
-        return {
-            ok: true,
-            message: 'Промокод успешно списан'
-        };
-    } catch (error) {
-        console.error('Ошибка finishPromoAfterCheckout:', error);
-
-        return {
-            ok: false,
-            message: 'Не удалось списать промокод'
-        };
-    }
-}
-
-async function checkoutToTelegram() {
-    if (cart.length === 0) {
-        alert('📦 Корзина пуста!');
-        return;
-    }
-
-    const username =
-        document.getElementById('customer-username')?.value.trim();
-
-    if (!username) {
-        alert('⛔ Введи свой юзернейм Telegram!');
-        return;
-    }
-
-    const paymentMethod =
-        document.querySelector('input[name="payment-method"]:checked')?.value ||
-        'card';
-
-    const totals = getCartTotals();
-    const total = totals.total;
-
-    let cashAmount = 0;
-
-    if (paymentMethod === 'cash') {
-        cashAmount = Number(
-            document.getElementById('cash-amount')?.value || 0
-        );
-
-        if (!cashAmount || cashAmount <= 0) {
-            alert('⛔ Введи сумму наличными!');
+            renderCatalog();
             return;
         }
 
-        if (cashAmount < total) {
-            alert(
-                `⛔ Не хватает ${(total - cashAmount).toFixed(2)} BYN.`
-            );
-            return;
-        }
-    }
+        if (buyButton) {
+            const productId = buyButton.dataset.id;
+            const product = products.find(item => String(item.id) === String(productId));
 
-    const checkoutButton =
-        document.querySelector('.checkout-btn');
-
-    if (checkoutButton) {
-        checkoutButton.disabled = true;
-        checkoutButton.textContent = 'Оформляем...';
-    }
-
-    const promoForOrder = activePromo
-        ? {
-            code: activePromo.code,
-            discountPercent: activePromo.discountPercent
-        }
-        : null;
-
-    try {
-        /*
-         * Если есть активный промокод:
-         * сначала надёжно списываем его в Supabase,
-         * затем открываем Telegram с заказом.
-         */
-        if (promoForOrder) {
-            const promoResult = await finishPromoAfterCheckout();
-
-            if (!promoResult.ok) {
-                alert(`⛔ ${promoResult.message}`);
-
-                await loadActivePromo();
-
+            if (!product) {
+                console.warn('Товар не найден:', productId);
                 return;
             }
+
+            handleBuyProduct(product);
         }
+    });
+}
 
-        const now = new Date();
+function handleBuyProduct(product) {
+    const title = product.name || product.title || 'товар';
+    const price = product.price ? formatPrice(product.price) : '';
 
-        const dateString = now.toLocaleDateString('ru-RU');
+    console.log('Выбран товар:', product);
 
-        const timeString = now.toLocaleTimeString(
-            'ru-RU',
-            {
-                hour: '2-digit',
-                minute: '2-digit'
-            }
-        );
+    const message = price
+        ? `Вы выбрали: ${title}, цена ${price}`
+        : `Вы выбрали: ${title}`;
 
-        let message = '🛒 ЗАКАЗ TRAHAN ZIZHKA\n\n';
+    showToast(message);
 
-        message += `📅 Дата: ${dateString}\n`;
-        message += `⏰ Время: ${timeString}\n`;
-        message += `👤 Юзернейм: ${username}\n\n`;
-        message += '📋 Товары:\n';
+    const orderInput = document.getElementById('orderProduct');
 
-        cart.forEach(item => {
-            const itemTotal =
-                Number(item.price) * Number(item.quantity);
+    if (orderInput) {
+        orderInput.value = title;
+    }
 
-            message +=
-                `▪️ ${item.name} × ${item.quantity} = ${itemTotal.toFixed(2)} BYN\n`;
+    const orderSection = document.getElementById('order');
+
+    if (orderSection) {
+        orderSection.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
         });
-
-        message +=
-            `\n💰 Сумма без скидки: ${totals.subtotal.toFixed(2)} BYN\n`;
-
-        if (promoForOrder) {
-            message += `🎟 Промокод: ${promoForOrder.code}\n`;
-
-            message +=
-                `📉 Скидка: −${totals.discountAmount.toFixed(2)} BYN (${promoForOrder.discountPercent}%)\n`;
-        }
-
-        message += `💜 К оплате: ${total.toFixed(2)} BYN\n`;
-
-        if (paymentMethod === 'card') {
-            message += '\n💳 Оплата: Картой\n';
-        } else {
-            const change = cashAmount - total;
-
-            message += '\n💵 Оплата: Наличными\n';
-            message +=
-                `🤲 Клиент даёт: ${cashAmount.toFixed(2)} BYN\n`;
-            message +=
-                `🔁 Сдача: ${change.toFixed(2)} BYN\n`;
-        }
-
-        message += '\n✅ Подтверждаю!';
-
-        const url =
-            `https://t.me/TrahanZizhka?text=${encodeURIComponent(message)}`;
-
-        if (window.Telegram?.WebApp?.openTelegramLink) {
-            window.Telegram.WebApp.openTelegramLink(url);
-        } else {
-            window.open(url, '_blank');
-        }
-
-        const user = getCurrentTelegramUser();
-
-        if (user?.id) {
-            const oldStats = getOrderStats(user.id);
-
-            localStorage.setItem(
-                `order_stats_${user.id}`,
-                JSON.stringify({
-                    orders: oldStats.orders + 1,
-                    spent: oldStats.spent + total
-                })
-            );
-        }
-
-        alert(
-            promoForOrder
-                ? '✅ Заказ сформирован. Промокод использован и больше недоступен.'
-                : '✅ Заказ сформирован.'
-        );
-    } catch (error) {
-        console.error('Ошибка оформления заказа:', error);
-
-        alert('⛔ Не удалось оформить заказ.');
-    } finally {
-        if (checkoutButton) {
-            checkoutButton.disabled = false;
-            checkoutButton.textContent = 'Оформить заказ';
-        }
     }
 }
 
-// ========== 18+ ==========
+// ========== ПРОМО ==========
 
-function checkAge() {
-    const modal = document.getElementById('age-modal');
+function initPromo() {
+    const promoButtons = document.querySelectorAll('[data-promo]');
 
-    if (!modal) return;
+    promoButtons.forEach(button => {
+        button.addEventListener('click', async () => {
+            const promoCode = button.dataset.promo;
 
-    modal.classList.remove('hidden');
-    document.body.classList.add('age-locked');
-}
+            if (!promoCode) return;
 
-function confirmAge(isAdult) {
-    if (isAdult) {
-        document.getElementById('age-modal')?.classList.add('hidden');
-        document.body.classList.remove('age-locked');
-    } else {
-        window.location.href =
-            'https://www.youtube.com/results?search_query=мультфильмы';
-    }
-}
-
-// ========== ПРОФИЛЬ TELEGRAM ==========
-
-function getTelegramUser() {
-    const tg = window.Telegram?.WebApp;
-
-    if (!tg) return null;
-
-    tg.ready();
-
-    return tg.initDataUnsafe?.user || null;
-}
-
-function getCurrentTelegramUser() {
-    return getTelegramUser();
-}
-
-function openProfileTab() {
-    setActiveTab('profile-tab');
-
-    const modal = document.getElementById('profile-modal');
-
-    if (!modal) return;
-
-    modal.style.display = 'flex';
-
-    renderProfile();
-}
-
-function closeProfileTab() {
-    const modal = document.getElementById('profile-modal');
-
-    if (modal) {
-        modal.style.display = 'none';
-    }
-}
-
-function logoutProfile() {
-    /*
-     * В Telegram Mini App нет обычного logout.
-     * Не очищаем промокод вручную:
-     * при следующем открытии он снова загрузится из базы.
-     */
-    closeProfileTab();
-}
-
-function getOrderStats(userId) {
-    try {
-        const stats = JSON.parse(
-            localStorage.getItem(`order_stats_${userId}`) || '{}'
-        );
-
-        return {
-            orders: Number(stats.orders) || 0,
-            spent: Number(stats.spent) || 0
-        };
-    } catch {
-        return {
-            orders: 0,
-            spent: 0
-        };
-    }
-}
-
-function renderProfile() {
-    const user = getTelegramUser();
-
-    const loginBlock = document.getElementById('profile-login');
-    const userBlock = document.getElementById('profile-user');
-
-    if (!loginBlock || !userBlock) return;
-
-    if (!user) {
-        loginBlock.style.display = 'block';
-        userBlock.style.display = 'none';
-
-        activePromo = null;
-
-        updatePromoInterface();
-
-        return;
-    }
-
-    loginBlock.style.display = 'none';
-    userBlock.style.display = 'block';
-
-    const name = [
-        user.first_name,
-        user.last_name
-    ]
-        .filter(Boolean)
-        .join(' ');
-
-    const profileName = document.getElementById('profile-name');
-    const profileUsername = document.getElementById('profile-username');
-    const profileId = document.getElementById('profile-id');
-    const avatar = document.getElementById('profile-avatar');
-
-    if (profileName) {
-        profileName.textContent = name || 'Пользователь';
-    }
-
-    if (profileUsername) {
-        profileUsername.textContent = user.username
-            ? `@${user.username}`
-            : 'Username не указан';
-    }
-
-    if (profileId) {
-        profileId.textContent = user.id;
-    }
-
-    if (avatar) {
-        avatar.src = user.photo_url || 'images/default-avatar.png';
-    }
-
-    const stats = getOrderStats(user.id);
-
-    const orders = document.getElementById('profile-orders');
-    const spent = document.getElementById('profile-spent');
-
-    if (orders) {
-        orders.textContent = stats.orders;
-    }
-
-    if (spent) {
-        spent.textContent = `${stats.spent.toFixed(2)} BYN`;
-    }
-
-    loadActivePromo();
-}
-
-function refreshProfile() {
-    renderProfile();
-}
-
-function copyTelegramId() {
-    const id = document.getElementById('profile-id')?.textContent;
-
-    if (!id || id === 'Неизвестно') return;
-
-    navigator.clipboard.writeText(id)
-        .then(() => {
-            alert('✅ Telegram ID скопирован');
-        })
-        .catch(() => {
-            alert('⛔ Не удалось скопировать Telegram ID');
+            await activatePromo(promoCode);
         });
+    });
 }
 
-// ========== ПРОМОКОДЫ ==========
-
-function updatePromoInterface() {
-    const status = document.getElementById('promo-status');
-    const input = document.getElementById('promo-input');
-    const button = document.querySelector('.promo-form button');
-
-    if (!status || !input) return;
-
-    if (activePromo) {
-        status.textContent =
-            `✅ ${activePromo.code}: скидка ${activePromo.discountPercent}% активна`;
-
-        status.style.color = '#63e6be';
-
-        input.value = activePromo.code;
-        input.disabled = true;
-
-        if (button) {
-            button.disabled = true;
-            button.textContent = 'Активирован';
-        }
-    } else {
-        status.textContent =
-            'Введи код, чтобы получить скидку.';
-
-        status.style.color = '';
-
-        input.value = '';
-        input.disabled = false;
-
-        if (button) {
-            button.disabled = false;
-            button.textContent = 'Активировать';
-        }
-    }
-}
-
-async function activatePromoCode() {
+async function activatePromo(promoCode) {
     if (promoRequestInProgress) return;
 
-    const user = getCurrentTelegramUser();
-
-    if (!user?.id) {
-        alert(
-            '⛔ Открой магазин через кнопку Mini App в Telegram-боте.'
-        );
-        return;
-    }
-
-    if (!supabaseClient) {
-        alert(
-            '⛔ Supabase не подключён. Проверь подключение библиотеки в index.html.'
-        );
-        return;
-    }
-
-    if (activePromo) {
-        alert('⛔ У тебя уже есть активный промокод.');
-        return;
-    }
-
-    const input = document.getElementById('promo-input');
-
-    const code = input?.value
-        .trim()
-        .toUpperCase();
-
-    if (!code) {
-        alert('⛔ Введи промокод.');
-        return;
-    }
-
-    const button = document.querySelector('.promo-form button');
-
-    promoRequestInProgress = true;
-
-    if (button) {
-        button.disabled = true;
-        button.textContent = 'Проверяем...';
-    }
-
     try {
-        const { data, error } = await supabaseClient.rpc(
-            'activate_promo_code',
-            {
-                p_code: code,
-                p_telegram_id: user.id
+        promoRequestInProgress = true;
+
+        activePromo = promoCode;
+
+        document.querySelectorAll('[data-promo]').forEach(button => {
+            button.classList.remove('active');
+
+            if (button.dataset.promo === promoCode) {
+                button.classList.add('active');
             }
-        );
+        });
 
-        if (error) {
-            console.error('Ошибка activate_promo_code:', error);
+        showToast(`Промокод ${promoCode} активирован`);
 
-            alert('⛔ Ошибка при проверке промокода.');
-            return;
-        }
-
-        if (!data?.ok) {
-            alert(
-                `⛔ ${data?.message || 'Промокод не активирован'}`
-            );
-            return;
-        }
-
-        activePromo = {
-            code: data.code,
-            discountPercent: Number(data.discount_percent)
-        };
-
-        localStorage.setItem(
-            `active_promo_${user.id}`,
-            JSON.stringify(activePromo)
-        );
-
-        updatePromoInterface();
-
-        alert(
-            `✅ Промокод активирован: скидка ${activePromo.discountPercent}%`
-        );
-
-        if (
-            document.getElementById('cart-modal')?.style.display === 'flex'
-        ) {
-            renderCartWithEdit();
-        }
     } catch (error) {
-        console.error('Ошибка activatePromoCode:', error);
-
-        alert('⛔ Не удалось активировать промокод.');
+        console.error('Ошибка активации промокода:', error);
+        showToast('Не удалось активировать промокод');
     } finally {
         promoRequestInProgress = false;
-
-        if (button && !activePromo) {
-            button.disabled = false;
-            button.textContent = 'Активировать';
-        }
     }
 }
 
-async function loadActivePromo() {
-    const user = getCurrentTelegramUser();
+// ========== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ==========
 
-    if (!user?.id || !supabaseClient) {
-        activePromo = null;
-        updatePromoInterface();
-        return;
-    }
+function getCategoryTitle(category) {
+    const map = {
+        all: 'Все',
+        disposable: 'Одноразовые',
+        pod: 'POD-системы',
+        liquid: 'Жидкости',
+        liquids: 'Жидкости',
+        accessories: 'Аксессуары',
+        device: 'Устройства',
+        devices: 'Устройства'
+    };
 
-    try {
-        const { data, error } = await supabaseClient.rpc(
-            'get_active_promo',
-            {
-                p_telegram_id: user.id
-            }
-        );
-
-        if (error) {
-            console.error('Ошибка get_active_promo:', error);
-
-            activePromo = null;
-            updatePromoInterface();
-
-            return;
-        }
-
-        if (data?.ok) {
-            activePromo = {
-                code: data.code,
-                discountPercent: Number(data.discount_percent)
-            };
-
-            localStorage.setItem(
-                `active_promo_${user.id}`,
-                JSON.stringify(activePromo)
-            );
-        } else {
-            activePromo = null;
-
-            localStorage.removeItem(`active_promo_${user.id}`);
-        }
-
-        updatePromoInterface();
-
-        if (
-            document.getElementById('cart-modal')?.style.display === 'flex'
-        ) {
-            renderCartWithEdit();
-        }
-    } catch (error) {
-        console.error('Ошибка loadActivePromo:', error);
-
-        activePromo = null;
-        updatePromoInterface();
-    }
+    return map[category] || category;
 }
 
-// ========== ЗАКРЫТИЕ ОКОН ==========
-
-document.getElementById('cart-modal')?.addEventListener(
-    'click',
-    function (event) {
-        if (event.target === this) {
-            toggleCart();
-        }
-    }
-);
-
-document.getElementById('profile-modal')?.addEventListener(
-    'click',
-    function (event) {
-        if (event.target === this) {
-            closeProfileTab();
-        }
-    }
-);
-
-document.addEventListener('keydown', function (event) {
-    if (event.key !== 'Escape') return;
-
-    const cartModal = document.getElementById('cart-modal');
-
-    if (cartModal?.style.display === 'flex') {
-        toggleCart();
+function formatPrice(value) {
+    if (value === null || value === undefined || value === '') {
+        return 'Цена не указана';
     }
 
-    closeProfileTab();
+    const number = Number(value);
 
-    if (
-        document.getElementById('sidebar')?.classList.contains('active')
-    ) {
-        toggleMenu();
-    }
-});
-
-// ========== ЗАГРУЗКА ==========
-
-document.addEventListener('DOMContentLoaded', function () {
-    window.Telegram?.WebApp?.ready();
-
-    checkAge();
-    renderCatalog();
-    updateCart();
-    renderProfile();
-
-    setActiveTab('catalog-tab');
-});
-async function completeOrder(orderId) {
-  await db.$transaction(async (tx) => {
-    const order = await tx.orders.findUnique({
-      where: { id: orderId },
-    });
-
-    if (!order) {
-      throw new Error('Заказ не найден');
+    if (Number.isNaN(number)) {
+        return String(value);
     }
 
-    if (order.status === 'completed' || order.countedInLoyalty) {
-      return;
+    return `${number.toLocaleString('ru-RU')} ₽`;
+}
+
+function showToast(message) {
+    let toast = document.getElementById('toast');
+
+    if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'toast';
+        toast.className = 'toast';
+        document.body.appendChild(toast);
     }
 
-    await tx.orders.update({
-      where: { id: orderId },
-      data: {
-        status: 'completed',
-        completedAt: new Date(),
-        countedInLoyalty: true,
-      },
-    });
+    toast.textContent = message;
+    toast.classList.add('show');
 
-    const user = await tx.users.update({
-      where: { id: order.userId },
-      data: {
-        completedOrdersCount: {
-          increment: 1,
-        },
-      },
-    });
+    clearTimeout(showToast.timer);
 
-    if (user.completedOrdersCount >= 10) {
-      await tx.users.update({
-        where: { id: order.userId },
-        data: {
-          loyaltyDiscountPercent: 20,
-        },
-      });
-    }
-  });
-}if (user.completedOrdersCount === 10) {
-  await tx.userPromocodes.create({
-    data: {
-      userId: order.userId,
-      code: 'LOYALTY20',
-      discountPercent: 20,
-      status: 'active',
-      expiresAt: addDays(new Date(), 30),
-    },
-  });
+    showToast.timer = setTimeout(() => {
+        toast.classList.remove('show');
+    }, 2500);
+}
+
+function escapeHtml(value) {
+    return String(value ?? '')
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;');
+}
+
+function escapeAttribute(value) {
+    return escapeHtml(value);
 }
