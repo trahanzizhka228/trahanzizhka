@@ -1181,4 +1181,14 @@ async function completeOrder(orderId) {
       });
     }
   });
+}if (user.completedOrdersCount === 10) {
+  await tx.userPromocodes.create({
+    data: {
+      userId: order.userId,
+      code: 'LOYALTY20',
+      discountPercent: 20,
+      status: 'active',
+      expiresAt: addDays(new Date(), 30),
+    },
+  });
 }
