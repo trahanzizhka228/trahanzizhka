@@ -67,17 +67,7 @@ const products = [
     ],
     description: "150мг"
   },
-  {
-    id: 304,
-    name: "FAFF",
-    price: 16,
-    category: "snus",
-    brand: "faff",
-    flavors: [
-      "Сливочные вафли"
-    ],
-    description: "150 мг"
-  },
+ 
   {
     id: 8,
     name: "BJORN LONG 80mg 🧛",
