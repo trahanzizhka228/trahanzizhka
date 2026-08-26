@@ -1140,3 +1140,45 @@ document.addEventListener('DOMContentLoaded', function () {
 
     setActiveTab('catalog-tab');
 });
+async function completeOrder(orderId) {
+  await db.$transaction(async (tx) => {
+    const order = await tx.orders.findUnique({
+      where: { id: orderId },
+    });
+
+    if (!order) {
+      throw new Error('Заказ не найден');
+    }
+
+    if (order.status === 'completed' || order.countedInLoyalty) {
+      return;
+    }
+
+    await tx.orders.update({
+      where: { id: orderId },
+      data: {
+        status: 'completed',
+        completedAt: new Date(),
+        countedInLoyalty: true,
+      },
+    });
+
+    const user = await tx.users.update({
+      where: { id: order.userId },
+      data: {
+        completedOrdersCount: {
+          increment: 1,
+        },
+      },
+    });
+
+    if (user.completedOrdersCount >= 10) {
+      await tx.users.update({
+        where: { id: order.userId },
+        data: {
+          loyaltyDiscountPercent: 20,
+        },
+      });
+    }
+  });
+}
