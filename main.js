@@ -1140,55 +1140,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
     setActiveTab('catalog-tab');
 });
-async function completeOrder(orderId) {
-  await db.$transaction(async (tx) => {
-    const order = await tx.orders.findUnique({
-      where: { id: orderId },
-    });
+document.addEventListener('DOMContentLoaded', function () {
+    window.Telegram?.WebApp?.ready();
 
-    if (!order) {
-      throw new Error('Заказ не найден');
-    }
+    checkAge();
+    renderCatalog();
+    updateCart();
+    renderProfile();
 
-    if (order.status === 'completed' || order.countedInLoyalty) {
-      return;
-    }
-
-    await tx.orders.update({
-      where: { id: orderId },
-      data: {
-        status: 'completed',
-        completedAt: new Date(),
-        countedInLoyalty: true,
-      },
-    });
-
-    const user = await tx.users.update({
-      where: { id: order.userId },
-      data: {
-        completedOrdersCount: {
-          increment: 1,
-        },
-      },
-    });
-
-    if (user.completedOrdersCount >= 10) {
-      await tx.users.update({
-        where: { id: order.userId },
-        data: {
-          loyaltyDiscountPercent: 20,
-        },
-      });
-    }
-  });
-}if (user.completedOrdersCount === 10) {
-  await tx.userPromocodes.create({
-    data: {
-      userId: order.userId,
-      code: 'LOYALTY20',
-      discountPercent: 20,
-      status: 'active',
-      expiresAt: addDays(new Date(), 30),
-    },
-  });
-}
+    setActiveTab('catalog-tab');
+});
