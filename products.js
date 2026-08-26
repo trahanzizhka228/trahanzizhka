@@ -120,17 +120,7 @@ const products = [
     ],
     description: "30мл"
   },
-  {
-    id: 36,
-    name: "САМОУБИЙЦА V2 DANGER ⚡️",
-    price: 18,
-    category: "liquid",
-    brand: "самоубийцы",
-    flavors: [
-      "Арбузно дынный фреш 🤩"
-    ],
-    description: "30мл"
-  },
+
   {
     id: 81,
     name: "Монашка HOTSPOT",
