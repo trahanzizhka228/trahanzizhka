@@ -1478,3 +1478,15 @@ body.age-locked {
     cursor: default;
     opacity: 0.55;
 }
+
+header {
+    margin-top: 0 !important;
+}
+
+.top-navigation {
+    margin-top: 0 !important;
+}
+
+.catalog {
+    padding-top: 0 !important;
+}
