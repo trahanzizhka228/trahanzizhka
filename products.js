@@ -285,7 +285,7 @@ const products = [
   {
     id: 106,
     name: "HOTSPOT x PODONKI 60 мг",
-    price: 14,
+    price: 15,
     category: "liquid",
     brand: "hotspot , podonki",
     flavors: [
