@@ -41,19 +41,7 @@ const products = [
     ],
     description: "150 мг"
   },
-  {
-    id: 302,
-    name: "ICEBERG RISING SUN ULTRA",
-    price: 16,
-    category: "snus",
-    brand: "iceberg",
-    flavors: [
-      "Кислые ягоды",
-      "Клубника-гранат",
-      "Сладкая мята"
-    ],
-    description: "150 мг"
-  },
+
   {
     id: 303,
     name: "ICEBERG HARDCORE",
@@ -79,7 +67,7 @@ const products = [
       "Виноград арбуз",
     // "Энергетик черника",
       "Клубника банан",
-      "Морс из лесных ягод",
+     // "Морс из лесных ягод",
       "Мята спрайт",
      // "Энергетик черника",
       "Ягодная жвачка"
