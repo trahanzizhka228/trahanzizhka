@@ -2,7 +2,7 @@ const products = [
   {
     id: 500,
     name: "Кофеиновые паучи ICEBERG",
-    price: 16,
+    price: 13,
     category: "kofeinq",
     brand: "ICBERG",
     flavors: [
