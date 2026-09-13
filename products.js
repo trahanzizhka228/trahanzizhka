@@ -1,5 +1,20 @@
 const products = [
   {
+    id: 500,
+    name: "Кофеиновые паучи ICEBERG",
+    price: 16,
+    category: "kofeinq",
+    brand: "ICBERG",
+    flavors: [
+      "Клубника с манго",
+      "Сладкая мята ",
+      "Энергетик",
+      "Мятный арбуз",
+      "Зеленое яблоко"
+    ],
+    description: "кофеиновые паучи "
+  },
+  {
     id: 1,
     name: "D.L.T.A ☠️",
     price: 16,
