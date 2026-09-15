@@ -256,7 +256,7 @@ const products = [
     brand: "bjorn",
     flavors: [
       // "Арбуз дыня",
-      "Виноград черная смородина",
+     // "Виноград черная смородина",
       "Халапеньо лайм",
       "Клубника банан",
       "Кола вишня",
@@ -353,7 +353,7 @@ const products = [
     ],
     description: "60mg, 30мл"
   },
-  {
+/*  {
     id: 110,
     name: "CATSWILL X MONSTERVAPOR",
     price: 18,
@@ -364,7 +364,7 @@ const products = [
       "Красное сладкое яблоко с кислинкой"
     ],
     description: "50mg, 30мл"
-  },
+  },*/
   {
     id: 111,
     name: "ANNIMA LOVE ZOMBIE",
