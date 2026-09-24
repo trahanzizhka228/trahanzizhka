@@ -417,7 +417,7 @@ const products = [
     name: "RICH",
     price: 18,
     category: "liquid",
-    brand: "rich",
+    brand: "Rich",
     flavors: [
       "Арбуз фреш",
       "Ванильная кола",
