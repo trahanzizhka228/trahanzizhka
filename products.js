@@ -125,8 +125,10 @@ const products = [
     category: "liquid",
     brand: "dogswill",
     flavors: [
+      "Кислый чупа чупс с холодком",
       "Mountain dew ⛰️🫧"
     ],
+    
     description: "60 мг, 30мл"
   },
   {
