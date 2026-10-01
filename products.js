@@ -18,6 +18,23 @@ const products = [
     description: "80mg, 30мл"
   },
   {
+  id: 101,
+  name: "🧪 Bjorn Темный Хор",
+  price: 20,
+  category: "liquid",
+  brand: "bjorn",
+  flavors: [
+    "Арбуз лед 🍉🧊",
+    "Арбуз мята 🍉🌿",
+    "Голубика лед 🫐🧊",
+    "Кислое зеленое яблоко 🍏🍋",
+    "Кислый ягодный микс 🫐🍓🍋",
+    "Мятная жвачка 🌿🫧"
+  ],
+  description: "80 мг, 30мл"
+}
+
+  {
     id: 102,
     name: "🧪 Bjorn Сон Призрака",
     price: 20,
