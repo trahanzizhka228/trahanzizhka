@@ -1,4 +1,72 @@
 const products = [
+   {
+    id: 1,
+    name: "💀 D.L.T.A ☠️",
+    price: 16,
+    category: "snus",
+    brand: "D.L.T.A",
+    flavors: [
+      "Red Bull 🐂⚡",
+      "Adrenaline RUSH PEPSI 💙⚡",
+      "Adrenaline RUSH LIMITED EDITION ICE EFFECT 🔳🧊",
+      "Adrenaline RUSH 🤩⚡",
+      "Adrenaline VITAMIN POWER 🙃💪",
+      "Red bull The blue edition 💙",
+      "Red bull The pink edition 💗"
+    ],
+    description: "Снюс, крепкий"
+  },
+  {
+    id: 2,
+    name: "💀 D.L.T.A XS ☠️",
+    price: 16,
+    category: "snus",
+    brand: "D.L.T.A",
+    flavors: [
+      "Микс ягод 🫐🍓",
+      "Зеленый виноград мята 🍇🌿"
+    ],
+    description: "Снюс, крепкий"
+  },
+/*  {
+    id: 301,
+    name: "🔥 Iceburn Ghetto",
+    price: 16,
+    category: "snus",
+    brand: "iceburn",
+    flavors: [
+      "GHOST-энергетик Байкал 👻⚡",
+      "DARTH VADER-перечная мята 🖤🌿🌶️"
+    ],
+    description: "150 мг"
+  },*/
+  {
+    id: 303,
+    name: "🔥 Iceberg Hardcore",
+    price: 16,
+    category: "snus",
+    brand: "iceberg",
+    flavors: [
+      "Black fury 🖤⚡",
+      "Ice shock 🧊💥"
+    ],
+    description: "150мг"
+  },
+  {
+    id: 500,
+    name: "⚡ Кофеиновые паучи Iceberg",
+    price: 13,
+    category: "kofein",
+    brand: "ICBERG",
+    flavors: [
+      "Клубника с манго 🍓🥭",
+      "Сладкая мята 🌿🍬",
+      "Энергетик ⚡",
+      "Мятный арбуз 🌿🍉",
+      "Зеленое яблоко 🍏"
+    ],
+    description: "Кофеиновые паучи"
+  },
   {
     id: 8,
     name: "🧪 Bjorn Long 80mg 🧛",
@@ -144,7 +212,7 @@ const products = [
     flavors: [
       "Mountain dew ⛰️🫧",
      // "Виноград черника смородина 🍇🫐",
-      "Кислый чупа чупс с холодком 🍭🧊",
+  //    "Кислый чупа чупс с холодком 🍭🧊",
     //  "Клубнично банановая жвачка 🍓🍌🫧",
      // "Ягодный морс 🫐🍓"
     ],
@@ -369,74 +437,7 @@ const products = [
     ],
     description: "70 мг, 30мл"
   },
-  {
-    id: 1,
-    name: "💀 D.L.T.A ☠️",
-    price: 16,
-    category: "snus",
-    brand: "D.L.T.A",
-    flavors: [
-      "Red Bull 🐂⚡",
-      "Adrenaline RUSH PEPSI 💙⚡",
-      "Adrenaline RUSH LIMITED EDITION ICE EFFECT 🔳🧊",
-      "Adrenaline RUSH 🤩⚡",
-      "Adrenaline VITAMIN POWER 🙃💪",
-      "Red bull The blue edition 💙",
-      "Red bull The pink edition 💗"
-    ],
-    description: "Снюс, крепкий"
-  },
-  {
-    id: 2,
-    name: "💀 D.L.T.A XS ☠️",
-    price: 16,
-    category: "snus",
-    brand: "D.L.T.A",
-    flavors: [
-      "Микс ягод 🫐🍓",
-      "Зеленый виноград мята 🍇🌿"
-    ],
-    description: "Снюс, крепкий"
-  },
-  {
-    id: 301,
-    name: "🔥 Iceburn Ghetto",
-    price: 16,
-    category: "snus",
-    brand: "iceburn",
-    flavors: [
-      "GHOST-энергетик Байкал 👻⚡",
-      "DARTH VADER-перечная мята 🖤🌿🌶️"
-    ],
-    description: "150 мг"
-  },
-  {
-    id: 303,
-    name: "🔥 Iceberg Hardcore",
-    price: 16,
-    category: "snus",
-    brand: "iceberg",
-    flavors: [
-      "Black fury 🖤⚡",
-      "Ice shock 🧊💥"
-    ],
-    description: "150мг"
-  },
-  {
-    id: 500,
-    name: "⚡ Кофеиновые паучи Iceberg",
-    price: 13,
-    category: "kofein",
-    brand: "ICBERG",
-    flavors: [
-      "Клубника с манго 🍓🥭",
-      "Сладкая мята 🌿🍬",
-      "Энергетик ⚡",
-      "Мятный арбуз 🌿🍉",
-      "Зеленое яблоко 🍏"
-    ],
-    description: "Кофеиновые паучи"
-  },
+ 
   {
     id: 48,
     name: "🔧 Картридж Xros 0.4 (3мл)",
