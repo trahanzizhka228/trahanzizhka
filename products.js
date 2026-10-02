@@ -33,7 +33,7 @@ const products = [
   ],
   description: "80 мг, 30мл"
 }
-
+,
   {
     id: 102,
     name: "🧪 Bjorn Сон Призрака",
