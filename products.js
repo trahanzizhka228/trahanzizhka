@@ -82,7 +82,7 @@ const products = [
   {
     id: 125,
     name: "🧪 Monster Hardcore",
-    price: 15,
+    price: 16,
     category: "liquid",
     brand: "monster",
     isNew: true,
