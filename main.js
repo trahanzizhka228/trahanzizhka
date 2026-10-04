@@ -1150,3 +1150,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     setActiveTab('catalog-tab');
 });
+${product.isNew ? '<span class="badge-new">Новинка</span>' : ''}
+
+
+
