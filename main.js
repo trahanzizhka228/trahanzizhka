@@ -106,6 +106,8 @@ function renderCatalog() {
             <div class="product-card ${hasFlavors ? 'has-flavors' : ''} ${isOpen ? 'open' : ''}">
                 <div
                     class="product-header"
+                    ${product.isNew ? '<span class="badge-new">Новинка</span>' : ''}
+
                     onclick="${hasFlavors ? `toggleCard(${product.id})` : ''}"
                 >
                     <div class="product-image" data-product-name="${product.name}">
