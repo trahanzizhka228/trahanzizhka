@@ -64,7 +64,8 @@ function renderCatalog() {
         disposable: 'Одноразка',
         consumables: 'Расходник',
         cigarettes: 'Сигареты',
-        snus: 'Снюс'
+        snus: 'Снюс',
+        kofein: 'Кофеиновые паучи'
     };
 
     catalog.innerHTML = filtered.map(product => {
@@ -114,6 +115,7 @@ function renderCatalog() {
                             alt="${product.name}"
                             onerror="this.style.display='none'"
                         >
+                        ${product.isNew ? '<span class="badge-new">🔥 Новинка</span>' : ''}
                     </div>
 
                     <div class="product-info">
@@ -613,11 +615,6 @@ async function checkoutToTelegram() {
         : null;
 
     try {
-        /*
-         * Если есть активный промокод:
-         * сначала надёжно списываем его в Supabase,
-         * затем открываем Telegram с заказом.
-         */
         if (promoForOrder) {
             const promoResult = await finishPromoAfterCheckout();
 
@@ -781,11 +778,6 @@ function closeProfileTab() {
 }
 
 function logoutProfile() {
-    /*
-     * В Telegram Mini App нет обычного logout.
-     * Не очищаем промокод вручную:
-     * при следующем открытии он снова загрузится из базы.
-     */
     closeProfileTab();
 }
 
@@ -1140,18 +1132,3 @@ document.addEventListener('DOMContentLoaded', function () {
 
     setActiveTab('catalog-tab');
 });
-document.addEventListener('DOMContentLoaded', function () {
-    window.Telegram?.WebApp?.ready();
-
-    checkAge();
-    renderCatalog();
-    updateCart();
-    renderProfile();
-
-    setActiveTab('catalog-tab');
-});
-
-
-
-
-
