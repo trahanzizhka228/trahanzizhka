@@ -999,3 +999,15 @@ footer a:hover {
         width: 100%;
     }
 }
+.badge-new {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: #ff3b30;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 8px;
+  z-index: 2;
+}
