@@ -132,7 +132,7 @@ const products = [
       "Смородиновый холлс 🫐🍬",
       "Ягодная жвачка 🫐🫧"
     ],
-    description: "70 мг, 30мл"
+    description: "80 мг, 30мл"
   },
   {
     id: 128,
@@ -266,7 +266,7 @@ const products = [
     ],
     description: "70 мг, 30мл"
   },
-  {
+ /* {
     id: 116,
     name: "🧪 Dogswill",
     price: 15,
@@ -276,7 +276,7 @@ const products = [
       "Mountain dew ⛰️🫧"
     ],
     description: "60 мг, 30мл"
-  },
+  },*/
   {
     id: 117,
     name: "🧪 Anima Love Killer",
