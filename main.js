@@ -1,4 +1,4 @@
-const SUPABASE_URL = 'https://jqrjybptkhspfgbhvalo.supabase.co';
+даconst SUPABASE_URL = 'https://jqrjybptkhspfgbhvalo.supabase.co';
 const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_RDMAZ6lxzNWSShrdgDs0ug_d9nTPAcD';
 
 const supabaseClient = window.supabase?.createClient(
@@ -103,20 +103,20 @@ function renderCatalog() {
             : '';
 
         return `
-            <div class="product-card ${hasFlavors ? 'has-flavors' : ''} ${isOpen ? 'open' : ''}">
-                <div
-                    class="product-header"
-                    ${product.isNew ? '<span class="badge-new">Новинка</span>' : ''}
+    <div class="product-card ${hasFlavors ? 'has-flavors' : ''} ${isOpen ? 'open' : ''}">
+        ${product.isNew ? '<span class="badge-new">Новинка</span>' : ''}
 
-                    onclick="${hasFlavors ? `toggleCard(${product.id})` : ''}"
+        <div
+            class="product-header"
+            onclick="${hasFlavors ? `toggleCard(${product.id})` : ''}"
+        >
+            <div class="product-image">
+                <img
+                    src="${imagePath}"
+                    alt="${product.name}"
+                    onerror="this.style.display='none'"
                 >
-                    <div class="product-image" data-product-name="${product.name}">
-                        <img
-                            src="${imagePath}"
-                            alt="${product.name}"
-                            onerror="this.style.display='none'"
-                        >
-                    </div>
+            </div>
 
                     <div class="product-info">
                         <span class="category-badge">
