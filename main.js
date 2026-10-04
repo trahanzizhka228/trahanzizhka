@@ -1,4 +1,4 @@
-даconst SUPABASE_URL = 'https://jqrjybptkhspfgbhvalo.supabase.co';
+const SUPABASE_URL = 'https://jqrjybptkhspfgbhvalo.supabase.co';
 const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_RDMAZ6lxzNWSShrdgDs0ug_d9nTPAcD';
 
 const supabaseClient = window.supabase?.createClient(
