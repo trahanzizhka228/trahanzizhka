@@ -262,6 +262,7 @@ header p {
 }
 
 .product-image {
+    position: relative;      /* ← ЭТО ГЛАВНОЕ */
     display: flex;
     align-items: center;
     justify-content: center;
