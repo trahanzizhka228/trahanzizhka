@@ -103,20 +103,18 @@ function renderCatalog() {
             : '';
 
         return `
-    <div class="product-card ${hasFlavors ? 'has-flavors' : ''} ${isOpen ? 'open' : ''}">
-        ${product.isNew ? '<span class="badge-new">Новинка</span>' : ''}
-
-        <div
-            class="product-header"
-            onclick="${hasFlavors ? `toggleCard(${product.id})` : ''}"
-        >
-            <div class="product-image">
-                <img
-                    src="${imagePath}"
-                    alt="${product.name}"
-                    onerror="this.style.display='none'"
+            <div class="product-card ${hasFlavors ? 'has-flavors' : ''} ${isOpen ? 'open' : ''}">
+                <div
+                    class="product-header"
+                    onclick="${hasFlavors ? `toggleCard(${product.id})` : ''}"
                 >
-            </div>
+                    <div class="product-image" data-product-name="${product.name}">
+                        <img
+                            src="${imagePath}"
+                            alt="${product.name}"
+                            onerror="this.style.display='none'"
+                        >
+                    </div>
 
                     <div class="product-info">
                         <span class="category-badge">
@@ -1152,6 +1150,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     setActiveTab('catalog-tab');
 });
-
+${product.isNew ? '<span class="badge-new">Новинка</span>' : ''}
 
 
