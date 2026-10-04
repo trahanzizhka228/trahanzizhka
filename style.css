@@ -999,3 +999,34 @@ footer a:hover {
         width: 100%;
     }
 }
+/* ==================== БЕЙДЖ "НОВИНКА" ==================== */
+
+.badge-new {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 3;
+    padding: 6px 12px;
+    color: #ffffff;
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    background: linear-gradient(135deg, #ff3d81, #ff8c00);
+    border-radius: 20px;
+    box-shadow: 0 4px 14px rgba(255, 61, 129, 0.55);
+    animation: pulseNew 1.8s ease-in-out infinite;
+}
+
+@keyframes pulseNew {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 4px 14px rgba(255, 61, 129, 0.55);
+    }
+    50% {
+        transform: scale(1.07);
+        box-shadow: 0 6px 22px rgba(255, 61, 129, 0.85);
+    }
+}
+
+
