@@ -36,7 +36,7 @@ const products = [
     category: "snus",
     brand: "iceberg",
     flavors: [
-      "Black fury 🖤⚡",
+      //"Black fury 🖤⚡",
       "Ice shock 🧊💥"
     ],
     description: "150мг"
