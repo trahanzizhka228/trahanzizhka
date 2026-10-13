@@ -41,6 +41,51 @@ const products = [
     ],
     description: "150мг"
   },
+{
+  id: 129,
+  name: "💀 Iceberg Strong",
+  price: 16,
+  category: "snus",
+  brand: "iceberg",
+  flavors: [
+    "Черная смородина 🫐",
+    "Вишня 🍒",
+    "Виноград 🍇",
+    "Арбуз лайм 🍉🍋",
+    "Лесные ягоды 🫐🍓"
+  ],
+  description: "75 мг"
+},
+{
+  id: 130,
+  name: "💀 Iceberg Overkill",
+  price: 16,
+  category: "snus",
+  brand: "iceberg",
+  flavors: [
+    "Cherry riot 🍒💥",
+    "Citrus blast 🍋💥",
+    "Green rampage 🍏💥",
+    "Like strike ⚡💥",
+    "Night crush 🖤💥",
+    "Polar fury 🧊💥"
+  ],
+  description: "200 мг"
+},
+{
+  id: 131,
+  name: "💀 Iceberg Ultra",
+  price: 16,
+  category: "snus",
+  brand: "iceberg",
+  flavors: [
+    "Жвачка тутти-фрутти 🍬🫧",
+    "Мультифрукт цитрус 🍊🍋",
+    "Аромат цветов 🌸",
+    "Мандарин 🍊"
+  ],
+  description: "150 мг"
+},
 
   // КОФЕИНОВЫЕ ПАУЧИ
   {
